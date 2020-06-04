@@ -1,5 +1,6 @@
-import json	
+import json
 from functools import wraps
+
 
 def to_json(old_func):
     @wraps(old_func)
