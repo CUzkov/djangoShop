@@ -1,0 +1,74 @@
+https://app.quickdatabasediagrams.com/
+
+item
+-----
+id int PK FK -< item_image.item_id FK -< feedback.item_id FK -< change_owner_list.item_id
+name string
+price int
+description text
+created datetime
+likes int
+dislikes int
+item_level string
+tags int FK >-< tag.id
+sub_category_id int
+user_id int
+
+tag
+-----
+id int PK
+name string
+
+item_image
+-----
+id PK int
+path string
+item_id int
+
+feedback
+-----
+id PK int
+text text
+created datetime
+updated datetime
+item_id int
+
+sub_category
+-----
+id PK int FK -< item.sub_category_id
+title string
+categoty_id int
+
+category
+-----
+id PK int FK -< sub_category.categoty_id
+title string
+
+user
+-----
+id int PK FK -< item.user_id
+name string
+second_name string
+email string
+profile_image string
+status string
+balance int
+login string
+password string
+created datetime
+last_login datetime
+likes int
+dislike int
+
+role
+-----
+id int PK FK - user.id
+name string
+
+change_owner_list
+-----
+id int PK
+owner_login string
+buy_item datetime
+sell_item datetime
+item_id int
