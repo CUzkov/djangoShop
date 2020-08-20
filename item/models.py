@@ -25,14 +25,15 @@ class SubCategory(models.Model):
     def __str__(self):
         return str(self.id)
 
-class Product(models.Model):
+class Item(models.Model):
 
     name = models.CharField(max_length=20, blank=False, default='')
     price = models.PositiveIntegerField(blank=False, default=0)
     description = models.TextField(blank=True, default='')
-    quantity = models.PositiveIntegerField(blank=False, default=0)
+    created = models.DateTimeField(blank=True, null=True)
     likes = models.PositiveIntegerField(default=0, blank=False)
     dislikes = models.PositiveIntegerField(default=0, blank=False)
+    item_level = models.CharField(blank=False, default='Обычный')
 
     sub_category = models.ForeignKey('SubCategory', on_delete=models.CASCADE, default='id')
     tags = models.ManyToManyField(
@@ -41,8 +42,8 @@ class Product(models.Model):
     )
 
     class Meta:
-        verbose_name = 'product'
-        verbose_name_plural = 'products'
+        verbose_name = 'item'
+        verbose_name_plural = 'items'
 
     def __str__(self):
         return self.name
@@ -74,8 +75,19 @@ class Feedback(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
 
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, default='id')
+    item = models.ForeignKey('Item', on_delete=models.CASCADE, default='id')
 
     class Meta:
         verbose_name = 'feedback'
         verbose_name_plural = 'feedbacks'
+
+class ChangeOwnerList(models.Model):
+
+    
+
+    class Meta:
+        verbose_name = 'tag'
+        verbose_name_plural = 'tags'
+
+    def __str__(self):
+        return self.name
