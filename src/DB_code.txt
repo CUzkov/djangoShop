@@ -68,7 +68,7 @@ name string
 change_owner_list
 -----
 id int PK
-owner_login string
+user_id int FK >-< user.id
 buy_item datetime
 sell_item datetime
 item_id int
