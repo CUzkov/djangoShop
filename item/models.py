@@ -10,7 +10,7 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def __str__(self):
-        return self.id 
+        return self.title
 
 class SubCategory(models.Model):
 
@@ -23,7 +23,7 @@ class SubCategory(models.Model):
         verbose_name_plural = 'sub-categories'
 
     def __str__(self):
-        return self.id 
+        return str(self.id)
 
 class Product(models.Model):
 
