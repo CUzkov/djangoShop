@@ -129,3 +129,10 @@ dmypy.json
 .pyre/
 
 .vscode/
+
+node_modules/
+out/*
+.idea/*
+!out/index.html
+!out/images/*
+custom-build.js

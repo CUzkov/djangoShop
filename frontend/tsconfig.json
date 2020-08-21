@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "ES2015",
+      "ES2016",
+      "ES2017",
+      "ES2018"
+    ],
+    "jsx": "react",
+    "baseUrl": "src",
+    "paths": {
+      "components/*": [
+        "components/*"
+      ],
+      "app/*": [
+        "app/*"
+      ],
+      "pages/*": [
+        "pages/*"
+      ],
+      "core/*": [
+        "core/*"
+      ],
+      "constants/*": [
+        "constants/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ],
+      "types/*": [
+        "types/*"
+      ]
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "./custom.d.ts"
+  ]
+}
