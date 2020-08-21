@@ -37,10 +37,10 @@
         "source-map-loader": "^0.2.4"
     },
     "scripts": {
-        "build": "webpack && node custom-build.js",
+        "build": "webpack",
         "build-prod": "webpack && node custom-build.js --prod",
         "serve": "webpack-dev-server --open",
-        "start": "npm run serve",
+        "start": "npm run server",
         "lint": "eslint ./src",
         "lint:fix": "eslint --fix ./src"
     }
