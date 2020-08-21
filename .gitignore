@@ -131,6 +131,5 @@ dmypy.json
 .vscode/
 
 node_modules/
-frontend/static/*
+frontend/static/js_css/*
 .idea/*
-!frontend/static/images/*

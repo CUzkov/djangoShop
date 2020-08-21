@@ -1,9 +1,12 @@
+{% load static %}
+
 <html>
 
     <head>
         <title>Flex shop</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" data-meta-dynamic="true">
-        <link rel="stylesheet" href="static/main.css" />
+        <link rel="stylesheet" href="static/js_css/main.css" />
+        <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     </head>
 
     <body>
@@ -11,7 +14,6 @@
         </div>
     </body>
 
-    {% load static %}
-    <script src="{% static "bundle.js" %}" />
+    <script src="{% static "js_css/bundle.js" %}" />
 
 </html>
