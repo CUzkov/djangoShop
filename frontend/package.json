@@ -1,5 +1,5 @@
 {
-    "name": "cuzkov-shop",
+    "name": "flex-shop",
     "description": "awd",
     "license": "",
     "repository": "https://github.com/patosai/webpack-typescript-react-sass-boilerplate",
@@ -37,10 +37,10 @@
         "source-map-loader": "^0.2.4"
     },
     "scripts": {
-        "build": "webpack",
+        "build": "webpack && node custom-build.js",
         "build-prod": "webpack && node custom-build.js --prod",
         "serve": "webpack-dev-server --open",
-        "start": "npm run server",
+        "start": "npm run serve",
         "lint": "eslint ./src",
         "lint:fix": "eslint --fix ./src"
     }

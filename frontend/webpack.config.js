@@ -9,15 +9,15 @@ module.exports = {
     entry: ["./src/index.tsx", "./src/index.scss"],
     output: {
         filename: "bundle.js",
-        path: path.join(__dirname, "../static/js_css")
+        path: path.join(__dirname, "out")
     },
 
     devServer: {
-        contentBase: path.join(__dirname, '../static/js_css'),
+        contentBase: path.join(__dirname, 'out'),
         compress: true,
         hot: true,
         historyApiFallback: true,
-        port: 3434
+        port: 8080
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -30,8 +30,11 @@ module.exports = {
             components: srcPath('components'),
             app: srcPath('app'),
             pages: srcPath('pages'),
+            core: srcPath('core'),
+            common: srcPath('common'),
             types: srcPath('types'),
             constants: srcPath('constants'),
+            hooks: srcPath('hooks'),
             utils: srcPath('utils')
         }
     },
