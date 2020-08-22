@@ -11,12 +11,6 @@ import './app.scss';
 
 export const App = (): React.ReactElement => {
 
-	fetch('http://127.0.0.1:8000/api/item/')
-		.then(response => response.json())
-		.then(response => {
-			console.log(response)
-		});
-
 	return (
 		<>
 			<Router>

@@ -1,11 +1,10 @@
-.product-page__wrapper {
+.items-page__wrapper {
     width: 100%;
-    padding: 0px 100px 0px 100px;
-    
-}
-
-.linkk {
-    height: 200px;
-    width: 200px;
-    background-color: black;
+    padding: 200px 100px 0px 100px;
+    box-sizing: border-box;
+    .items-page__content {
+        height: 700px;
+        width: 1000px;
+        border: 1px solid black;
+    }
 }
