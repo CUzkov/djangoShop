@@ -7,5 +7,5 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^api/item/$', views.item_list),
+    url(r'^api/item/$', views.SideBar.as_view()),
 ]
