@@ -1,5 +1,5 @@
 from django.db import models
-from user.models import *
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -35,6 +35,8 @@ class Item(models.Model):
     likes = models.PositiveIntegerField(default=0, blank=False)
     dislikes = models.PositiveIntegerField(default=0, blank=False)
     item_level = models.CharField(max_length=20, blank=False, default='Обычный')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='User', on_delete=models.CASCADE, null=False, blank=False, default=1)
 
     sub_category = models.ForeignKey('SubCategory', on_delete=models.CASCADE, default='id')
     tags = models.ManyToManyField('Tag', blank=True)
@@ -84,7 +86,7 @@ class ChangeOwnerList(models.Model):
     buy_item = models.DateTimeField(blank=True, null=True)
     sell_item = models.DateTimeField(blank=True, null=True)
 
-    user = models.ManyToManyField(User, blank=True)
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL)
     item_id = models.ForeignKey('Item', on_delete=models.CASCADE, default='id')
 
     class Meta:
@@ -93,4 +95,3 @@ class ChangeOwnerList(models.Model):
 
     def __str__(self):
         return str(self.id)
-
