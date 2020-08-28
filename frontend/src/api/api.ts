@@ -12,4 +12,21 @@ export class APIGetContent {
 
     }
 
+    static createNewUser = async (body: IPostCreateUserFields) => {
+
+        delete body.repeat_password;
+
+        let response = await fetch(API_HOST + '/auth/users/', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        });
+        let responseJSON = response.json();
+        
+        return responseJSON;
+
+    }
+
 }

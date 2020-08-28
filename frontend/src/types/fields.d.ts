@@ -13,3 +13,10 @@ interface ISubCategory {
     "title": string,
     "category": number
 }
+
+interface IPostCreateUserFields {
+    "username": string,
+    "password": string,
+    "email": string,
+    "repeat_password": string
+}

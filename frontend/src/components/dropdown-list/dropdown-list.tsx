@@ -18,7 +18,7 @@ const DropDwonListInner: React.FC<DropDwonListProps> = ({
     category
 }: DropDwonListProps): ReactElement => {
     
-    const [isDropped, setIsDropped] = useState<boolean>();
+    const [isDropped, setIsDropped] = useState<boolean>(false);
 
     const onClickCategory = useCallback(():void => {
         setIsDropped(!isDropped);
