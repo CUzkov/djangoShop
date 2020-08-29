@@ -38,3 +38,17 @@ class SideBar(APIView):
         return Response(response)
 
 
+class CategoryView(APIView):
+
+    def post(self, request):
+
+        category = request.data.get('category')
+
+        serializer = CategorySerializer(data=category)
+
+        if serializer.is_valid(raise_exception=True):
+            category_saved = serializer.save()
+
+        return Response({
+            "Success": "dd"
+        })

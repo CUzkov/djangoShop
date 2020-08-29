@@ -15,6 +15,7 @@ class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
         fields = (
             'email',
+            'password',
             'first_name',
             'last_name', 
             'username', 

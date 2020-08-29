@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Category(models.Model):
 
-    title = models.CharField(max_length=20, blank=False, default='')
+    title = models.CharField(max_length=20, blank=False, default='', unique=True)
 
     class Meta:
         verbose_name = 'category'
@@ -15,7 +15,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
 
-    title = models.CharField(max_length=20, blank=False, default='')
+    title = models.CharField(max_length=20, blank=False, default='', unique=True)
 
     category = models.ForeignKey('Category', on_delete=models.CASCADE, default='id')
 
@@ -28,7 +28,7 @@ class SubCategory(models.Model):
 
 class Item(models.Model):
 
-    name = models.CharField(max_length=20, blank=False, default='')
+    name = models.CharField(max_length=20, blank=False, default='', unique=True)
     price = models.PositiveIntegerField(blank=False, default=0)
     description = models.TextField(blank=True, default='')
     created = models.DateTimeField(blank=True, null=True)
