@@ -10,6 +10,7 @@ import {
 import { isMobile } from 'react-device-detect';
 import { reducer, initialState } from './reducer'
 import { APIGetContent } from '../../api/api'
+import { Redirect } from 'react-router-dom';
 
 import './log-in-page.scss';
 
@@ -20,6 +21,8 @@ export const LogInPage = (): ReactElement => {
     const [userFields, dispatchUserFields] = useReducer(reducer, initialState);
     const emailInput = useRef(null);
     const [isRegButtonDisable, setIsRegButtonDisable] = useState<boolean>(true);
+    const [isLoginButtonDisablr, setIsLoginButtonDisable] = useState<boolean>(true);
+    const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
 
     const onClickOrRegButtonCB = useCallback((event: React.SyntheticEvent):void => {
         event.preventDefault();
@@ -54,21 +57,45 @@ export const LogInPage = (): ReactElement => {
 
     }, [userFields]);
 
+    const onCLickLoginButtonCB = useCallback((event: React.SyntheticEvent):void => {
+
+        event.preventDefault();
+
+        APIGetContent.getToken(userFields)
+            .then((response) => {
+
+                
+                console.log(response);
+
+                if(response.refresh) {
+
+                    localStorage.setItem("refresh_token", response.refresh);
+
+                    setIsRedirecting(true);
+                }
+                else {
+                    alert("Invalid login or password")
+                }
+
+            });
+
+    }, [userFields]);
+
     useEffect(() => {
 
         if(isRegBlockShow) {
             if(
                 userFields.username &&
                 emailInput.current.validity.valid
-            ) {
-                setIsRegButtonDisable(false);
-            }
-            else {
-                setIsRegButtonDisable(true);
-            }
+            ) { setIsRegButtonDisable(false); } 
+            else { setIsRegButtonDisable(true); }
         }
         else {
-
+            if(
+                userFields.username && 
+                userFields.password
+            ) { setIsLoginButtonDisable(false); }
+            else { setIsLoginButtonDisable(true); }
         }
 
     });
@@ -115,13 +142,11 @@ export const LogInPage = (): ReactElement => {
                                 </div>
                                 <button
                                     onClick={onClickRegButtonCB}
-                                    disabled={isRegButtonDisable}
-                                    >
+                                    disabled={isRegButtonDisable} >
                                     Зарегистрироваться
                                 </button>
                                 <button 
-                                    onClick={onClickOrRegButtonCB} 
-                                    >
+                                    onClick={onClickOrRegButtonCB} >
                                     Или войти
                                 </button>
                             </div>
@@ -131,16 +156,31 @@ export const LogInPage = (): ReactElement => {
                     (
                         <div className={'log-in-page__login-block F-R-C'}>
                             <div style={{width: "min-content"}}>
-                                <button>
+                                <input 
+                                    type={'text'}
+                                    placeholder={'Логин'}
+                                    required
+                                    onChange={onChangeRegInputCB('login')} />
+                                <input 
+                                    type={'password'} 
+                                    placeholder={'Пароль'}
+                                    required
+                                    onChange={onChangeRegInputCB('password')} />
+                                <button
+                                    disabled={isLoginButtonDisablr}
+                                    onClick={onCLickLoginButtonCB} >
                                     Войти
                                 </button>
                                 <button 
-                                    onClick={onClickOrRegButtonCB}>
+                                    onClick={onClickOrRegButtonCB} >
                                     Или зарегистрироваться
                                 </button>
                             </div>
                         </div>
                     )}
+                    {isRedirecting &&
+                        <Redirect to={'/'} push={true} />
+                    }
                 </main>
             )}  
         </>

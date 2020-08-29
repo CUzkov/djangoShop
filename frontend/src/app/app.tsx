@@ -6,6 +6,7 @@ import {
 import { MainPage } from 'pages/main-page'
 import { ItemsPage } from 'pages/items-page'
 import { LogInPage } from 'pages/log-in-page'
+import { Header } from 'components/header'
 
 import './app.scss';
 
@@ -15,6 +16,7 @@ export const App = (): React.ReactElement => {
 	return (
 		<>
 			<Router>
+				<Header />
 				<Route path="/" exact render={() => ( <MainPage /> )} />
 				<Route path="/items" render={() => ( <ItemsPage /> )} />
 				<Route path="/login" render={() => ( <LogInPage /> )} />

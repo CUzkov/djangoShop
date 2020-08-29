@@ -9,6 +9,7 @@
         padding: 30px 0px 0px 0px;
         .reg-block__input:after {
             content: '*';
+            margin-left: 2px;
         }
         .reg-block__input {
             flex-wrap: nowrap;
@@ -26,6 +27,9 @@
         button {
             margin-bottom: 30px;
             white-space: nowrap;
+        }
+        input {
+            margin-bottom: 30px;
         }
     }
 }

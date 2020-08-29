@@ -29,4 +29,22 @@ export class APIGetContent {
 
     }
 
+    static getToken = async (body: IPostCreateUserFields) => {
+
+        delete body.repeat_password;
+        delete body.email;
+
+        let response = await fetch(API_HOST + '/auth/jwt/create/', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        });
+        let responseJSON = response.json();
+        
+        return responseJSON;
+
+    }
+
 }
