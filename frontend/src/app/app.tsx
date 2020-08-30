@@ -7,6 +7,7 @@ import { MainPage } from 'pages/main-page'
 import { ItemsPage } from 'pages/items-page'
 import { LogInPage } from 'pages/log-in-page'
 import { Header } from 'components/header'
+import { ProfilePage } from 'pages/profile-page'
 
 import './app.scss';
 
@@ -17,9 +18,10 @@ export const App = (): React.ReactElement => {
 		<>
 			<Router>
 				<Header />
-				<Route path="/" exact render={() => ( <MainPage /> )} />
-				<Route path="/items" render={() => ( <ItemsPage /> )} />
-				<Route path="/login" render={() => ( <LogInPage /> )} />
+				<Route path={'/'} exact render={() => ( <MainPage /> )} />
+				<Route path={'/items'} render={() => ( <ItemsPage /> )} />
+				<Route path={'/login'} render={() => ( <LogInPage /> )} />
+				<Route path={'/profile'} render={() => ( <ProfilePage /> ) } />
 			</Router>
 		</>
 	)

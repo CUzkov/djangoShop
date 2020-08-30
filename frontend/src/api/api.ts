@@ -5,7 +5,7 @@ export class APIGetContent {
     
     static getSideBar = async ():Promise<ISideBar> => {
 
-        let response = await fetch(API_HOST + '/api/item/');
+        let response = await fetch(API_HOST + '/api/sidebar/');
         let responseJSON = response.json();
         
         return responseJSON;
@@ -45,6 +45,52 @@ export class APIGetContent {
         
         return responseJSON;
 
+    }
+
+    static getAccessToken = async () => {
+
+        let response = await fetch(API_HOST + '/auth/jwt/refresh/', {
+            method: 'POST',
+            body: JSON.stringify({
+                'refresh': localStorage.getItem('refresh_token'),
+            }),
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+            }
+        });
+
+        let responseJSON = response.json();
+        
+        return responseJSON;
+
+    }
+
+    static getUser = async () => {
+
+        if(!localStorage.getItem('refresh_token')) {
+            return false;
+        }
+        else {
+
+            let response = await APIGetContent.getAccessToken()
+                .then( async (accessToken) => {
+
+                    console.log(accessToken)
+
+                    let response = await fetch(API_HOST + '/auth/users/me', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken.access
+                        }
+                    });
+
+                    return response;
+
+                });
+
+            return response.json();
+
+        }
     }
 
 }

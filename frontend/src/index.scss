@@ -6,11 +6,11 @@ body {
 
 li {
     list-style-type: none; /* Убираем маркеры */
-   }
-   ul {
+}
+ul {
     margin-left: 0; /* Отступ слева в браузере IE и Opera */
     padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
-   }
+}
 
 // Flex classes
 
@@ -24,4 +24,10 @@ li {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.F-C-SP {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

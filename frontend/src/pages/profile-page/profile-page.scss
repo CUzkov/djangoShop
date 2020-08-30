@@ -1,0 +1,13 @@
+.profile-page__wrapper {
+    width: 100%;
+    padding: 50px 100px 100px 100px;
+    box-sizing: border-box;
+    .profile-page__content {
+        height: 700px;
+        width: 100%;
+        border: solid 1px black;
+        border-radius: 5px;
+        padding: 30px 30px 30px 30px;
+
+    }
+}

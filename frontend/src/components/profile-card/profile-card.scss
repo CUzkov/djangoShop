@@ -1,0 +1,19 @@
+.profile-card {
+    width: 600px;
+    height: 100%;
+    border-radius: 5px;
+    border: solid 1px black;
+    padding: 20px;
+    box-sizing: border-box;
+    .profile-card__main-info {
+        .profile-card__image {
+            height: 250px;
+            width: 250px;
+            border-radius: 5px;
+            border: solid 1px black;
+        }
+    }
+    .profile-card__add-info {
+
+    }
+}
