@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
 from rest_framework import status
 
@@ -6,9 +7,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Category, SubCategory
 from .serializers import *
 
+import json
 
 class SideBar(APIView):
     """ Запрос получения категорий и подкатегорий товаров """
+
+    permission_classes = [AllowAny]
 
     def get(self, request):
         
@@ -40,6 +44,17 @@ class SideBar(APIView):
 
 class CategoryView(APIView):
 
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+
+        categories = Category.objects.all()
+        serializer_categories = CategorySerializer(categories, many=True)
+
+        return Response({
+            "data": serializer_categories.data
+        })        
+
     def post(self, request):
 
         category = request.data.get('category')
@@ -50,5 +65,18 @@ class CategoryView(APIView):
             category_saved = serializer.save()
 
         return Response({
-            "Success": "dd"
+            "Success": "Add category " + json.dumps(category["title"])
+        })
+
+class TagView(APIView):
+
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+
+        tags = Tag.objects.all()
+        serializer_tags = TagSerializer(tags, many=True)
+
+        return Response({
+            "data": serializer_tags.data
         })

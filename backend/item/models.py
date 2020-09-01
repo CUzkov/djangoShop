@@ -51,14 +51,14 @@ class Item(models.Model):
 class Tag(models.Model):
 
     TAGS = [
-        ('L1', 'Level 1'),
-        ('L2', 'Level 2'),
-        ('L3', 'Level 3')
+        ('Level 1', 'Level 1'),
+        ('Level 2', 'Level 2'),
+        ('Level 3', 'Level 3'),
     ]
 
     name = models.CharField(
         blank=False,
-        max_length=2,
+        max_length=7,
         choices=TAGS
     )
 
