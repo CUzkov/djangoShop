@@ -2,12 +2,20 @@
     width: 100%;
     padding: 50px 100px 100px 100px;
     box-sizing: border-box;
+    font-size: 1em;
     .profile-page__content {
-        height: 700px;
-        width: 100%;
+        width: 80%;
         border: solid 1px black;
         border-radius: 5px;
-        padding: 30px 30px 30px 30px;
-
+        padding: 1.5em;
+        margin: 0 auto;
+        .profile-page__actions-buttons {
+            width: min-content;
+            button {
+                white-space: nowrap;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
     }
 }

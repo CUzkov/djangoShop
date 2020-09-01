@@ -18,7 +18,7 @@ export const Header = (): ReactElement => {
                 <header className={'header__wrapper'}>
                     <div className={'header__content F-R-SP'}>
                         <div className={'header__logo'}>
-                            CUzkov
+                            FlexShop
                         </div>
                         <nav className={'header__nav'}>
                             <ul className={'F-R-SP'}>

@@ -64,9 +64,6 @@ export const LogInPage = (): ReactElement => {
         APIGetContent.getToken(userFields)
             .then((response) => {
 
-                
-                console.log(response);
-
                 if(response.refresh) {
 
                     localStorage.setItem("refresh_token", response.refresh);

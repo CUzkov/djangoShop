@@ -75,8 +75,6 @@ export class APIGetContent {
             let response = await APIGetContent.getAccessToken()
                 .then( async (accessToken) => {
 
-                    console.log(accessToken)
-
                     let response = await fetch(API_HOST + '/auth/users/me', {
                         method: 'GET',
                         headers: {

@@ -1,19 +1,22 @@
 .profile-card {
     width: 600px;
-    height: 100%;
     border-radius: 5px;
     border: solid 1px black;
     padding: 20px;
     box-sizing: border-box;
     .profile-card__main-info {
         .profile-card__image {
-            height: 250px;
-            width: 250px;
-            border-radius: 5px;
+            height: 200px;
+            width: 200px;
+            border-radius: 200px;
             border: solid 1px black;
         }
-    }
-    .profile-card__add-info {
-
+        .profile-card__info {
+            ul {
+                li {
+                    line-height: 150%;
+                }
+            }
+        }
     }
 }

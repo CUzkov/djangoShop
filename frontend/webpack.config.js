@@ -35,7 +35,8 @@ module.exports = {
             types: srcPath('types'),
             constants: srcPath('constants'),
             hooks: srcPath('hooks'),
-            utils: srcPath('utils')
+            utils: srcPath('utils'),
+            api: srcPath('api'),
         }
     },
 

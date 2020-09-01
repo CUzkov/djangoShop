@@ -20,3 +20,17 @@ interface IPostCreateUserFields {
     "email": string,
     "repeat_password": string
 }
+
+interface IUserProfile {
+    "username"?: string,
+    "email"?: string,
+    "balance"?: number,
+    "birthday"?: string,
+    "date_joined"?: string,
+    "dislikes"?: number,
+    "first_name"?: string,
+    "id"?: number,
+    "last_name"?: string,
+    "likes"?: number,
+    "status"?: string,
+}

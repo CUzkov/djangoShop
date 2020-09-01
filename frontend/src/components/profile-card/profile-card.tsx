@@ -1,21 +1,22 @@
 import * as React from "react";
-import { ReactElement } from 'react';
+import { 
+    ReactElement,
+    memo 
+} from 'react';
 import { isMobile } from 'react-device-detect'
-import { APIGetContent } from '../../api/api'
+import { PAGE_TEXT } from 'constants/profile-page'
 
 import './profile-card.scss';
 
 
-export const ProfileCard = (): ReactElement => {
+interface IProfileCardProps {
+    readonly userProfile: IUserProfile
+}
 
-    const onClickDiv = () => {
-        
-        APIGetContent.getUser()
-            .then((response) => {
-                console.log(response)
-            });
+const ProfileCardInner: React.FC<IProfileCardProps> = ({
+    userProfile
+}: IProfileCardProps): ReactElement => {
 
-    }
 
     return (
         <>
@@ -26,15 +27,28 @@ export const ProfileCard = (): ReactElement => {
             (
                 <div className={'profile-card F-C-SP'}>
                     <div className={'profile-card__main-info F-R-SP'}>
-                        <div className={'profile-card__image'} onClick={onClickDiv}>
-
-                        </div>
-                    </div>
-                    <div className={'profile-card__add-info'}>
-
+                        <section>
+                            <div className={'profile-card__image'} />
+                            <div>{PAGE_TEXT.status + userProfile?.status}</div>
+                        </section>
+                        <section className={'profile-card__info'}>
+                            <ul>
+                                <li style={{fontSize: '3em'}}>
+                                    {userProfile?.username}
+                                </li>
+                                <li>
+                                    {PAGE_TEXT.first_name + userProfile?.first_name}
+                                </li>
+                                <li>
+                                    {PAGE_TEXT.last_name + userProfile?.last_name}
+                                </li>
+                            </ul>
+                        </section>                        
                     </div>
                 </div>
             )}  
         </>
     )
 }
+
+export const ProfileCard = memo(ProfileCardInner);
