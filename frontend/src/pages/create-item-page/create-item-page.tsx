@@ -1,16 +1,42 @@
 import * as React from 'react';
 import { 
     ReactElement,
-    memo
+    memo,
+    useReducer,
+    useEffect,
+    useState
 } from 'react';
 import { isMobile } from 'react-device-detect'
 import { PAGE_TEXT } from 'constants/create-item-page'
+import { initialStateCreateItem, reducerCreateItem } from './reducers'
+import { APIGetContent } from 'api/api'
+import classNames from 'classnames'
 
 import './create-item-page.scss';
 
 
 const CreateItemPageInner = (): ReactElement => {
     
+    const [itemFields, dispatchItemFields] = useReducer(reducerCreateItem, initialStateCreateItem);
+    const [tags, setTags] = useState<{
+        "id": number,
+        "name": string,
+    }[]>(null);
+
+    useEffect(() => {
+
+        APIGetContent.getTags()
+            .then((response) => {
+                setTags(response.data);
+
+                dispatchItemFields({
+                    type: 'tag',
+                });
+
+            });
+
+    }, []);
+
     return (
         <>
             {isMobile ? (
@@ -49,7 +75,17 @@ const CreateItemPageInner = (): ReactElement => {
                         <div className={'create-item-page__tags'}>
                             {PAGE_TEXT.item_tags_field}:
                             <div className={'create-item-page__tags-container'}>
-
+                                {tags?.map((tagObj, index) => (
+                                    <div 
+                                        className={
+                                            classNames(
+                                                'create-item-page__tag',
+                                                { 'create-item-page__tag--selected':  itemFields.tags[index]},
+                                            )}
+                                        key={index} >
+                                        {tagObj.name}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

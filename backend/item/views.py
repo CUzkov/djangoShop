@@ -44,7 +44,7 @@ class SideBar(APIView):
 
 class CategoryView(APIView):
 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -70,7 +70,7 @@ class CategoryView(APIView):
 
 class TagView(APIView):
 
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 

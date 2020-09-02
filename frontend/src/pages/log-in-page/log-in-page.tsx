@@ -21,8 +21,8 @@ export const LogInPage = (): ReactElement => {
     const [userFields, dispatchUserFields] = useReducer(reducer, initialState);
     const emailInput = useRef(null);
     const [isRegButtonDisable, setIsRegButtonDisable] = useState<boolean>(true);
-    const [isLoginButtonDisablr, setIsLoginButtonDisable] = useState<boolean>(true);
-    const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
+    const [isLoginButtonDisable, setIsLoginButtonDisable] = useState<boolean>(true);
+    const [isRedirectingToMainPage, setIsRedirectingToMainPage] = useState<boolean>(false);
 
     const onClickOrRegButtonCB = useCallback((event: React.SyntheticEvent):void => {
         event.preventDefault();
@@ -48,12 +48,20 @@ export const LogInPage = (): ReactElement => {
 
         if(userFields.password === userFields.repeat_password) {
 
-            const resp = APIGetContent.createNewUser(userFields);
+            APIGetContent.createNewUser(userFields)
+                .then((response) => {
+                    
+                    if(!response.email) {
+                        alert('Ошибка, попробуйте повторить действие');
+                    }
+                    else {
+                        setIsRegBlockShow(false);
+                    }
+                    
+                });
 
         }
-        else {
-
-        }
+        else { alert('Пароли должны совпадать!!!'); }
 
     }, [userFields]);
 
@@ -68,7 +76,7 @@ export const LogInPage = (): ReactElement => {
 
                     localStorage.setItem("refresh_token", response.refresh);
 
-                    setIsRedirecting(true);
+                    setIsRedirectingToMainPage(true);
                 }
                 else {
                     alert("Invalid login or password")
@@ -113,7 +121,8 @@ export const LogInPage = (): ReactElement => {
                                         type={'text'}
                                         placeholder={'Логин'}
                                         required
-                                        onChange={onChangeRegInputCB('login')} />
+                                        onChange={onChangeRegInputCB('login')}
+                                        autoComplete={'new-password'} />
                                 </div>
                                 <div className={'reg-block__input F-R-C'}>
                                     <input 
@@ -121,21 +130,24 @@ export const LogInPage = (): ReactElement => {
                                         placeholder={'Email'}
                                         required
                                         onChange={onChangeRegInputCB('email')}
-                                        ref={emailInput} />
+                                        ref={emailInput}
+                                        autoComplete={'new-password'} />
                                 </div>
                                 <div className={'reg-block__input F-R-C'}>
                                     <input 
                                         type={'password'} 
                                         placeholder={'Пароль'}
                                         required
-                                        onChange={onChangeRegInputCB('password')} />
+                                        onChange={onChangeRegInputCB('password')}
+                                        autoComplete={'new-password'} />
                                 </div>
                                 <div className={'reg-block__input F-R-C'}>
                                     <input 
                                         type={'password'} 
                                         placeholder={'Повторите пароль'}
                                         required
-                                        onChange={onChangeRegInputCB('repeat_password')} />
+                                        onChange={onChangeRegInputCB('repeat_password')}
+                                        autoComplete={'new-password'} />
                                 </div>
                                 <button
                                     onClick={onClickRegButtonCB}
@@ -164,7 +176,7 @@ export const LogInPage = (): ReactElement => {
                                     required
                                     onChange={onChangeRegInputCB('password')} />
                                 <button
-                                    disabled={isLoginButtonDisablr}
+                                    disabled={isLoginButtonDisable}
                                     onClick={onCLickLoginButtonCB} >
                                     Войти
                                 </button>
@@ -175,7 +187,7 @@ export const LogInPage = (): ReactElement => {
                             </div>
                         </div>
                     )}
-                    {isRedirecting &&
+                    {isRedirectingToMainPage &&
                         <Redirect to={'/'} push={true} />
                     }
                 </main>

@@ -6,9 +6,8 @@ export class APIGetContent {
     static getSideBar = async ():Promise<ISideBar> => {
 
         let response = await fetch(API_HOST + '/api/sidebar/');
-        let responseJSON = response.json();
         
-        return responseJSON;
+        return response.json();
 
     }
 
@@ -59,8 +58,14 @@ export class APIGetContent {
             }
         });
 
-        let responseJSON = response.json();
+        let responseJSON = await response.json();
         
+        if(responseJSON.code === 'token_not_valid') {
+            return {
+                error: 'token_not_valid',
+            };
+        }
+
         return responseJSON;
 
     }
@@ -68,12 +73,20 @@ export class APIGetContent {
     static getUser = async () => {
 
         if(!localStorage.getItem('refresh_token')) {
-            return false;
+            return {
+                error: 'no_refresh_token',
+            };
         }
         else {
 
             let response = await APIGetContent.getAccessToken()
                 .then( async (accessToken) => {
+
+                    if(accessToken.error) {
+                        return {
+                            error: accessToken.error,
+                        }
+                    }
 
                     let response = await fetch(API_HOST + '/auth/users/me', {
                         method: 'GET',
@@ -82,13 +95,21 @@ export class APIGetContent {
                         }
                     });
 
-                    return response;
+                    return response.json();
 
                 });
 
-            return response.json();
+            return response;
 
         }
+    }
+
+    static getTags = async () => {
+
+        let response = await fetch(API_HOST + '/api/tag/');
+
+        return response.json();
+
     }
 
 }

@@ -9,4 +9,5 @@ export const BUTTONS_TEXT = {
     'create_item': 'Создать предмет',
     'show_own_items': 'Показать хранящиеся предметы',
     'show_created_items': 'Показать созданные предметы',
+    'log_out': 'Выйти из аккаунта',
 }

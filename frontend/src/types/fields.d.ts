@@ -34,3 +34,11 @@ interface IUserProfile {
     "likes"?: number,
     "status"?: string,
 }
+
+interface IItemCreateFields {
+    "tags": {
+        "id": number,
+        "name": string,
+        "isSelect": boolean
+    }
+}

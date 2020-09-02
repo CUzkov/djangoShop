@@ -16,5 +16,21 @@
         .create-item-page__description {
             height: 200px;
         }
+        .create-item-page__tags {
+            height: min-content;
+            .create-item-page__tags-container {
+                .create-item-page__tag {
+                    display: inline;
+                    cursor: pointer;
+                    border: 1px solid black;
+                    border-radius: 15px;
+                    margin-right: 10px;
+                    padding: 0px 5px;
+                }
+                .create-item-page__tag--selected {
+                    background-color: chartreuse;
+                }
+            }
+        }
     }
 }

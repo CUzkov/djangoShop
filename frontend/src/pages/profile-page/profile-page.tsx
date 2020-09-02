@@ -17,17 +17,29 @@ import './profile-page.scss';
 
 const ProfilePageInner = (): ReactElement => {
     
-    const [userProfile, setUserProfile] = useState<IUserProfile>(null);
+    const [userProfile, setUserProfile] = useState(null);
     const [isRedirectToCreateItemPage, setIsRedirectToCreateItemPage] = useState<boolean>(false);
+    const [isRedirectToLoginPage, setIsRedirectToLoginPage] = useState<boolean>(false);
 
-    const onClickCreteItemButton = useCallback(() => {
+    const onClickCreteItemButtonCB = useCallback(() => {
         setIsRedirectToCreateItemPage(true);
     }, [isRedirectToCreateItemPage]);
+
+    const onClickLogOutButtunCB = useCallback(() => {
+        localStorage.removeItem('refresh_token');
+    }, []);
 
     useEffect(() => {
         APIGetContent.getUser()
             .then((response) => {
-                setUserProfile(response);
+
+                if(response.email) {
+                    setUserProfile(response);
+                }
+                else {
+                    setIsRedirectToLoginPage(true);
+                }   
+                    
             });
     }, []);
 
@@ -44,7 +56,7 @@ const ProfilePageInner = (): ReactElement => {
                             userProfile={userProfile} />
                         <section className={'profile-page__actions-buttons'}>
                             <button
-                                onClick={onClickCreteItemButton} >
+                                onClick={onClickCreteItemButtonCB} >
                                 {BUTTONS_TEXT.create_item}
                             </button>
                             <button>
@@ -53,10 +65,17 @@ const ProfilePageInner = (): ReactElement => {
                             <button>
                                 {BUTTONS_TEXT.show_created_items}
                             </button>
+                            <button
+                                onClick={onClickLogOutButtunCB} >
+                                {BUTTONS_TEXT.log_out}
+                            </button>
                         </section>
                     </main>
                     {isRedirectToCreateItemPage &&
                         <Redirect to={'/create-item'} push={true} />
+                    }
+                    {isRedirectToLoginPage &&
+                        <Redirect to={'/login'} push={true} />
                     }
                 </div>
             )}  
