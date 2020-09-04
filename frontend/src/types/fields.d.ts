@@ -40,5 +40,6 @@ interface IItemCreateFields {
         "id": number,
         "name": string,
         "isSelect": boolean
-    }
+    }[],
+    "category": number,
 }

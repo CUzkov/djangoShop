@@ -17,7 +17,7 @@ const SideBarInner = (): ReactElement => {
     const [sideBarContent, setSideBarContent] = useState<ISideBar>({});
 
     useEffect(():void => {
-        APIGetContent.getSideBar()
+        APIGetContent.getCategoryAndSubCategory()
             .then(response => setSideBarContent(response));
     }, []);
 

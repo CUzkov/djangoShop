@@ -7,4 +7,6 @@ export const PAGE_TEXT = {
     'item_category_field': 'Категория',
     'item_sub_category_field': 'Подкатегория',
     'item_tags_field': 'Теги',
+    'create_category': 'Создать категорию',
+    'create_sub_category': 'Создать подкатегорию',
 }

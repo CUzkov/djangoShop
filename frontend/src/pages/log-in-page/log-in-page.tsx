@@ -38,7 +38,7 @@ export const LogInPage = (): ReactElement => {
                 dispatchUserFields({
                     type: inputType,
                     [inputType]: event.target.value,
-        });
+                });
 
     }, [userFields]);
 
