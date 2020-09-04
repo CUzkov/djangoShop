@@ -1,10 +1,9 @@
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework import status
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Category, SubCategory
+from .models import *
 from .serializers import *
 
 import json
@@ -41,10 +40,9 @@ class SideBar(APIView):
 
         return Response(response)
 
-
 class CategoryView(APIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
 
@@ -65,12 +63,12 @@ class CategoryView(APIView):
             category_saved = serializer.save()
 
         return Response({
-            "Success": "Add category " + json.dumps(category["title"])
+            'response': 'Success created subcategory ' + json.dumps(category["title"])
         })
 
 class TagView(APIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
     def get(self, request):
 
@@ -79,4 +77,47 @@ class TagView(APIView):
 
         return Response({
             "data": serializer_tags.data
+        })
+
+class SubCategoryView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def post(self, request):
+
+        sub_category = request.data.get('sub_category')
+
+        serializer = SubCategorySerializer(data=sub_category)
+
+        if serializer.is_valid(raise_exception=True):
+            sub_category_saved = serializer.save()
+
+        return Response({
+            'response': 'Success created subcategory ' + json.dumps(sub_category['title'])
+        })
+
+class ItemView(APIView):
+
+    permission_classes  = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+
+        items = Item.objects.all()
+        serializer_items = ItemSerializer(items, many=True)
+
+        return Response({
+            'data': serializer_items.data
+        })
+
+    def post(self, request):
+
+        item = request.data.get('item')
+
+        serializer = ItemSerializer(data=item)
+
+        if serializer.is_valid(raise_exception=True):
+            item_saved = serializer.save()
+
+        return Response({
+            'response': 'Success created subcategory ' + json.dumps(item['name'])
         })
