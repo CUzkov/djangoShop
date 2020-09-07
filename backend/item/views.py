@@ -68,7 +68,7 @@ class CategoryView(APIView):
 
 class TagView(APIView):
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticatedOrReadOnly] 
 
     def get(self, request):
 

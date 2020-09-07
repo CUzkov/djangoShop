@@ -9,4 +9,9 @@ export const PAGE_TEXT = {
     'item_tags_field': 'Теги',
     'create_category': 'Создать категорию',
     'create_sub_category': 'Создать подкатегорию',
+    'or_select': 'Или выбрать',
+    'create_category_placeholder': 'Название категории',
+    'create_sub_category_placeholder': 'Название подкатегории',
+    'create_tag': '+',
+    'create_tag_button': 'создать',
 }

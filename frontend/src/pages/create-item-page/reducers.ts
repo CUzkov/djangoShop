@@ -1,11 +1,15 @@
 export const initialStateCreateItem = {
     "tags": [],
-    "category": -1,
+    "sub_category": 1,
+    "name": '',
+    "description": '',
+    "price": 0,
 }
 
 export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreateFields => {
 
     switch (action.type) {
+
         case 'tag':
 
             let bufferTag = [...state.tags];
@@ -14,29 +18,61 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
 
             return {
                 "tags": bufferTag,
-                "category": state.category,
+                "sub_category": state.sub_category,
+                "description": state.description,
+                "name": state.name,
+                "price": state.price,
             };
+
         case "all-tags":
             return {
                 "tags": action.tags,
-                "category": state.category,
+                "sub_category": state.sub_category,
+                "name": state.name,
+                "price": state.price,
+                "description": state.description,
             };
-        case 'category':
 
-            let categoryId = -1;
-
-            for(let i = 0; i < action.categories.data.lenth; i++)
-            {
-                if(action.categories.data[i].title === action.category) {
-                    categoryId = action.categories.data[i].id;
-                    break;
-                }
-            }
+        case 'sub_category':
 
             return {
                 "tags": state.tags,
-                "category": categoryId,
+                "sub_category": action.sub_categoryId,
+                "name": state.name,
+                "description": state.description,
+                "price": state.price,
             };
+
+        case 'name': 
+
+            return {
+                "tags": state.tags,
+                "sub_category": state.sub_category,
+                "name": action.name,
+                "description": state.description,
+                "price": state.price,
+            };
+
+        case 'description':
+
+            return {
+                "tags": state.tags,
+                "sub_category": state.sub_category,
+                "name": state.name,
+                "description": action.description,
+                "price": state.price,
+            };
+
+        case 'price':
+
+            return {
+                "tags": state.tags,
+                "sub_category": state.sub_category,
+                "name": state.name,
+                "description": state.description,
+                "price": action.price,
+            }
+        
         default:
             state
     }
