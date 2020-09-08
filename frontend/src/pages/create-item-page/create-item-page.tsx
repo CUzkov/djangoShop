@@ -6,6 +6,7 @@ import {
     useEffect,
     useCallback,
     useState,
+    useRef,
 } from 'react';
 import { isMobile, isMobileOnly } from 'react-device-detect'
 import { PAGE_TEXT } from 'constants/create-item-page'
@@ -24,9 +25,10 @@ const CreateItemPageInner = (): ReactElement => {
     const [isShowSubCategoryCreate, setIsShowSubCategoryCreate] = useState<boolean>(true);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
     const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
+    const [createTagInput, setCreateTagInput] = useState<string>('');
 
     const onlyNumberRegExp = /[^0-9]+/;
-
+    
 
     useEffect(() => {
 
@@ -52,13 +54,23 @@ const CreateItemPageInner = (): ReactElement => {
 
     }, []);
 
-    const onClickTagCB = useCallback((tagIndex: number) =>
+    const onClickTagCB = useCallback((tagIndex: number, isNew: boolean = false) =>
         (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            dispatchItemFields({
-                type: 'tag',
-                tagIndex: tagIndex,
-            });
 
+            if(isNew) {
+                dispatchItemFields({
+                    type: 'new_tag_select',
+                    tagIndex: tagIndex,
+                });
+            }
+            else
+            {
+                dispatchItemFields({
+                    type: 'tag',
+                    tagIndex: tagIndex,
+                });
+            }
+     
     }, [itemFields]);
 
     const onChangeCategorySelectCB = useCallback((event) => {
@@ -120,9 +132,29 @@ const CreateItemPageInner = (): ReactElement => {
     }, [isCreatingTag]);
 
     const onCLickCreateTagButton = useCallback(() => {
+        
         event.stopPropagation();
 
-    }, [isCreatingTag]);
+        dispatchItemFields({
+            type: 'new_tag',
+            "new_tag": createTagInput,
+        });
+
+        setCreateTagInput('');
+
+    }, [isCreatingTag, createTagInput]);
+
+    const onChangeCreateTagInput = useCallback((event) => {
+        setCreateTagInput(event.target.value);
+    }, [createTagInput]);
+
+    const onClickCreateTagCancel = useCallback((event) => {
+
+        event.stopPropagation();
+        setIsCreatingTag(false);
+        setCreateTagInput('');
+        
+    }, [isCreatingTag, createTagInput]);
 
     console.log(itemFields)
 
@@ -254,6 +286,18 @@ const CreateItemPageInner = (): ReactElement => {
                                         {tagObj.name}
                                     </div>
                                 ))}
+                                {itemFields.new_tags?.map((tagObj, index) => (
+                                    <div
+                                        className={
+                                            classNames(
+                                                'create-item-page__tag',
+                                                { 'create-item-page__tag--selected':  itemFields.new_tags[index].isSelect },
+                                            )}
+                                            key={index}
+                                            onClick={onClickTagCB(index, true)} >
+                                        {tagObj.name}
+                                    </div>
+                                ))}
                                 {isCreatingTag ? (
                                     <div
                                         className={'create-item-page__tag'}
@@ -261,10 +305,15 @@ const CreateItemPageInner = (): ReactElement => {
                                             <input 
                                                 className={'create-item-page__craete-tag_input'}
                                                 onClick={onClickCreateTagInput}
-                                                type="text" />
+                                                type="text"
+                                                value={createTagInput}
+                                                onChange={onChangeCreateTagInput} />
                                             <button
-                                                onClick={} >
+                                                onClick={onCLickCreateTagButton} >
                                                 {PAGE_TEXT.create_tag_button}
+                                            </button>
+                                            <button>
+                                                {PAGE_TEXT.cancel}
                                             </button>
                                     </div>
                                 )

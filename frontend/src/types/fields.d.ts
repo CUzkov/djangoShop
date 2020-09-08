@@ -49,4 +49,8 @@ interface IItemCreateFields {
     "name": string,
     "description": string,
     "price": number,
+    "new_tags": {
+        "name": string,
+        "isSelect": boolean,
+    }[],
 }

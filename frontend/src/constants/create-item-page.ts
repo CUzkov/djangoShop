@@ -14,4 +14,5 @@ export const PAGE_TEXT = {
     'create_sub_category_placeholder': 'Название подкатегории',
     'create_tag': '+',
     'create_tag_button': 'создать',
+    'cancel': 'отмена',
 }

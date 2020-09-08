@@ -4,6 +4,7 @@ export const initialStateCreateItem = {
     "name": '',
     "description": '',
     "price": 0,
+    "new_tags": []
 }
 
 export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreateFields => {
@@ -22,6 +23,7 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "description": state.description,
                 "name": state.name,
                 "price": state.price,
+                "new_tags": state.new_tags,
             };
 
         case "all-tags":
@@ -31,6 +33,7 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "name": state.name,
                 "price": state.price,
                 "description": state.description,
+                "new_tags": state.new_tags,
             };
 
         case 'sub_category':
@@ -41,6 +44,7 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "name": state.name,
                 "description": state.description,
                 "price": state.price,
+                "new_tags": state.new_tags,
             };
 
         case 'name': 
@@ -51,6 +55,7 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "name": action.name,
                 "description": state.description,
                 "price": state.price,
+                "new_tags": state.new_tags,
             };
 
         case 'description':
@@ -61,6 +66,7 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "name": state.name,
                 "description": action.description,
                 "price": state.price,
+                "new_tags": state.new_tags,
             };
 
         case 'price':
@@ -71,10 +77,42 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 "name": state.name,
                 "description": state.description,
                 "price": action.price,
-            }
+                "new_tags": state.new_tags,
+            };
+
+        case 'new_tag':
+
+            return {
+                "tags": state.tags,
+                "sub_category": state.sub_category,
+                "name": state.name,
+                "description": state.description,
+                "price": state.price,
+                "new_tags": [...state.new_tags, {
+                    "name": action.new_tag,
+                    "isSelect": false,
+                }],
+            };
+
+        case 'new_tag_select':
+
+            let bufferNewTag = [...state.new_tags];
+
+            bufferNewTag[action.tagIndex].isSelect = !bufferNewTag[action.tagIndex].isSelect;
+
+            return {
+                "tags": state.tags,
+                "sub_category": state.sub_category,
+                "name": state.name,
+                "description": state.description,
+                "price": state.price,
+                "new_tags": bufferNewTag,
+            };
         
         default:
-            state
+            
+            return state;    
+
     }
 
 }
