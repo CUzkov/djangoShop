@@ -31,7 +31,6 @@ class Item(models.Model):
     name = models.CharField(max_length=20, blank=False, default='', unique=True)
     price = models.PositiveIntegerField(blank=False, default=0)
     description = models.TextField(blank=True, default='')
-    created = models.DateTimeField(blank=True, null=True)
     likes = models.PositiveIntegerField(default=0, blank=False)
     dislikes = models.PositiveIntegerField(default=0, blank=False)
     item_level = models.CharField(max_length=20, blank=False, default='Обычный')
@@ -50,16 +49,9 @@ class Item(models.Model):
 
 class Tag(models.Model):
 
-    TAGS = [
-        ('Level 1', 'Level 1'),
-        ('Level 2', 'Level 2'),
-        ('Level 3', 'Level 3'),
-    ]
-
     name = models.CharField(
         blank=False,
-        max_length=7,
-        choices=TAGS
+        max_length=70,
     )
 
     class Meta:
