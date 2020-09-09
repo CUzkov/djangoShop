@@ -35,17 +35,20 @@ interface IUserProfile {
     "status"?: string,
 }
 
-interface ICreateCategory {
-
-}
-
 interface IItemCreateFields {
     "tags": {
         "id": number,
         "name": string,
         "isSelect": boolean
     }[],
-    "sub_category": any,
+    "category": {
+        "id": number,
+        "new_title": string,
+        "sub_category": {
+            "id": number,
+            "new_title": string,
+        },
+    }
     "name": string,
     "description": string,
     "price": number,

@@ -6,9 +6,8 @@ import {
     useEffect,
     useCallback,
     useState,
-    useRef,
 } from 'react';
-import { isMobile, isMobileOnly } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 import { PAGE_TEXT } from 'constants/create-item-page'
 import { initialStateCreateItem, reducerCreateItem } from './reducers'
 import { APIGetContent } from 'api/api'
@@ -23,7 +22,6 @@ const CreateItemPageInner = (): ReactElement => {
     const [categoriesAndSubCaregories, setCategoriesAndSubCaregories] = useState<ISideBar>({});
     const [isShowCategoryCreate, setIsShowCategoryCreate] = useState<boolean>(true);
     const [isShowSubCategoryCreate, setIsShowSubCategoryCreate] = useState<boolean>(true);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
     const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
     const [createTagInput, setCreateTagInput] = useState<string>('');
 
@@ -41,7 +39,7 @@ const CreateItemPageInner = (): ReactElement => {
                 }
 
                 dispatchItemFields({
-                    type: 'all-tags',
+                    type: 'init-tags',
                     tags: response.data,
                 });
 
@@ -49,7 +47,15 @@ const CreateItemPageInner = (): ReactElement => {
 
         APIGetContent.getCategoryAndSubCategory()
             .then((response) => {
+
                 setCategoriesAndSubCaregories(response);
+
+                dispatchItemFields({
+                    type: 'refresh-categories',
+                    categoryId: response.data[0].id,
+                    subCategoryId: response.data[0].sub_categories[0].id,
+                });
+
             });
 
     }, []);
@@ -74,26 +80,26 @@ const CreateItemPageInner = (): ReactElement => {
     }, [itemFields]);
 
     const onChangeCategorySelectCB = useCallback((event) => {
-
-        setSelectedCategoryId(event.target.value);
-
         dispatchItemFields({
-            type: 'sub_category',
-            sub_categoryId: categoriesAndSubCaregories.data[event.target.value - 1].sub_categories[0].id || -1,
+            type: 'category',
+            'categoryId': event.target.value,
+            'subCategoryId': categoriesAndSubCaregories.data[event.target.value - 1].sub_categories[0].id || -1,
         });
-
-    }, [selectedCategoryId, categoriesAndSubCaregories]);
+    }, [itemFields, categoriesAndSubCaregories]);
 
     const onChangeSubCategotySelectCB = useCallback((event) => {
         dispatchItemFields({
             type: 'sub_category',
-            sub_categoryId: Number(event.target.value),
+            subСategoryId: Number(event.target.value),
         });
     }, [itemFields]);
 
     const onClickCreateCategoryCB = useCallback(() => {
         setIsShowCategoryCreate(false);
         setIsShowSubCategoryCreate(false);
+        dispatchItemFields({
+            type: 'click_create_category',
+        });
     }, [isShowCategoryCreate, isShowSubCategoryCreate]);
 
     const onClickCreateSubCategoryCB = useCallback(() => {
@@ -103,6 +109,11 @@ const CreateItemPageInner = (): ReactElement => {
     const onClickOrSelectCategoryCB = useCallback(() => {
         setIsShowCategoryCreate(true);
         setIsShowSubCategoryCreate(true);
+        dispatchItemFields({
+            type: 'refresh-categories',
+            categoryId: categoriesAndSubCaregories.data[0].id,
+            subCategoryId: categoriesAndSubCaregories.data[0].sub_categories[0].id,
+        });
     }, [isShowCategoryCreate, isShowSubCategoryCreate]);
 
     const onChangeTextInput = useCallback((fieldName: string) => (event) => {
@@ -176,12 +187,12 @@ const CreateItemPageInner = (): ReactElement => {
                             onChange={onChangeTextInput('name')}
                             value={itemFields.name} />
                         <hr/>
-                        {isShowCategoryCreate && typeof(itemFields.sub_category) === typeof(0) ? (
+                        {isShowCategoryCreate ? (
                             <div className={'create-item-page__select-button F-R-SP'}>
                                 {PAGE_TEXT.item_category_field}
                                 <select 
                                     style={{width: '40%'}}  
-                                    value={selectedCategoryId}
+                                    value={itemFields.category.id}
                                     onChange={onChangeCategorySelectCB} >
                                     {categoriesAndSubCaregories.data?.map((category: ICategory, index: number) => (
                                         <option 
@@ -219,10 +230,10 @@ const CreateItemPageInner = (): ReactElement => {
                                 <select 
                                     style={{width: '40%'}}
                                     onChange={onChangeSubCategotySelectCB}
-                                    value={itemFields.sub_category} >
+                                    value={itemFields.category.sub_category.id} >
                                     {categoriesAndSubCaregories.data &&
                                         categoriesAndSubCaregories
-                                            .data[selectedCategoryId - 1]
+                                            .data[itemFields.category.id - 1]
                                             .sub_categories
                                             ?.map((subCategoty: ISubCategory, index: number) => (
                                                 <option 
@@ -312,7 +323,8 @@ const CreateItemPageInner = (): ReactElement => {
                                                 onClick={onCLickCreateTagButton} >
                                                 {PAGE_TEXT.create_tag_button}
                                             </button>
-                                            <button>
+                                            <button
+                                                onClick={onClickCreateTagCancel} >
                                                 {PAGE_TEXT.cancel}
                                             </button>
                                     </div>
