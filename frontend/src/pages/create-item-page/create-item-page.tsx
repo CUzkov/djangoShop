@@ -83,7 +83,10 @@ const CreateItemPageInner = (): ReactElement => {
         dispatchItemFields({
             type: 'category',
             'categoryId': event.target.value,
-            'subCategoryId': categoriesAndSubCaregories.data[event.target.value - 1].sub_categories[0].id || -1,
+            'subCategoryId': isShowSubCategoryCreate ? 
+                categoriesAndSubCaregories.data[event.target.value - 1].sub_categories[0].id || -1
+                :
+                -1,
         });
     }, [itemFields, categoriesAndSubCaregories]);
 
@@ -104,6 +107,9 @@ const CreateItemPageInner = (): ReactElement => {
 
     const onClickCreateSubCategoryCB = useCallback(() => {
         setIsShowSubCategoryCreate(false);
+        dispatchItemFields({
+            type: 'click_create_sub_category'
+        });
     }, [isShowSubCategoryCreate]);
 
     const onClickOrSelectCategoryCB = useCallback(() => {
@@ -167,6 +173,20 @@ const CreateItemPageInner = (): ReactElement => {
         
     }, [isCreatingTag, createTagInput]);
 
+    const onChangeNewCategoryInput = useCallback((event) => {
+        dispatchItemFields({
+            type: 'new_category',
+            new_category: event.target.value,
+        });
+    }, [itemFields]);
+
+    const onChangeNewSubCategoryInput = useCallback((event) => {
+        dispatchItemFields({
+            type: 'new_sub_category',
+            new_sub_category: event.target.value,
+        });
+    }, [itemFields]);
+
     console.log(itemFields)
 
 
@@ -215,7 +235,9 @@ const CreateItemPageInner = (): ReactElement => {
                                 <input 
                                     type={'text'} 
                                     style={{width: '40%'}}
-                                    placeholder={PAGE_TEXT.create_category_placeholder} />
+                                    placeholder={PAGE_TEXT.create_category_placeholder}
+                                    value={itemFields.category.new_title}
+                                    onChange={onChangeNewCategoryInput} />
                                 <button 
                                     style={{width: '40%'}}
                                     onClick={onClickOrSelectCategoryCB} >
@@ -256,7 +278,9 @@ const CreateItemPageInner = (): ReactElement => {
                                 <input 
                                     type={'text'} 
                                     style={{width: '40%'}}
-                                    placeholder={PAGE_TEXT.create_sub_category_placeholder} />
+                                    placeholder={PAGE_TEXT.create_sub_category_placeholder}
+                                    value={itemFields.category.sub_category.new_title}
+                                    onChange={onChangeNewSubCategoryInput} />
                                 <button
                                     style={{width: '40%'}}
                                     onClick={onClickOrSelectCategoryCB} >

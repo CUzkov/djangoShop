@@ -109,6 +109,18 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 },
             };
 
+        case 'click_create_sub_category':
+            return {
+                ...state,
+                category: {
+                    ...state.category,
+                    "sub_category": {
+                        "id": -1,
+                        "new_title": '',
+                    }
+                },
+            };
+
         case 'refresh-categories':
             return {
                 ...state,
@@ -135,8 +147,28 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 },
             };
 
-        default:
-            
+        case 'new_category':
+            return {
+                ...state,
+                category: {
+                    ...state.category,
+                    "new_title": action.new_category,
+                },
+            };
+
+        case 'new_sub_category':
+            return {
+                ...state,
+                category: {
+                    ...state.category,
+                    "sub_category": {
+                        "id": state.category.sub_category.id,
+                        "new_title": action.new_sub_category,
+                    }
+                },
+            };
+
+        default: 
             return state;    
 
     }
