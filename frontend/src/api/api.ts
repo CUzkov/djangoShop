@@ -22,9 +22,8 @@ export class APIGetContent {
                 'Content-Type': 'application/json;charset=utf-8'
             }
         });
-        let responseJSON = response.json();
         
-        return responseJSON;
+        return response.json()
 
     }
 
@@ -109,6 +108,36 @@ export class APIGetContent {
         let response = await fetch(API_HOST + '/api/tag/');
 
         return response.json();
+
+    }
+
+    static postItemCreate = async (body: IItemCreateFields) => {
+
+        let response = await APIGetContent.getAccessToken()
+            .then(async (accessToken) => {
+
+                if(accessToken.error) {
+                    return {
+                        error: accessToken.error,
+                    }
+                }
+
+                let response = await fetch(API_HOST + '/api/item/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        item: {...body}
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        'Authorization': 'Bearer ' + accessToken.access
+                    },
+                });
+
+                return response.json();
+
+            });
+
+        return response;
 
     }
 

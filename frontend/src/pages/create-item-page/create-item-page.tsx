@@ -24,6 +24,7 @@ const CreateItemPageInner = (): ReactElement => {
     const [isShowSubCategoryCreate, setIsShowSubCategoryCreate] = useState<boolean>(true);
     const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
     const [createTagInput, setCreateTagInput] = useState<string>('');
+    const [isCreateButtonDisable, setIsCreateButtonDisable] = useState<boolean>(true);
 
     const onlyNumberRegExp = /[^0-9]+/;
     
@@ -148,7 +149,7 @@ const CreateItemPageInner = (): ReactElement => {
         event.stopPropagation();
     }, [isCreatingTag]);
 
-    const onCLickCreateTagButton = useCallback(() => {
+    const onCLickCreateTagButton = useCallback((event) => {
         
         event.stopPropagation();
 
@@ -186,6 +187,33 @@ const CreateItemPageInner = (): ReactElement => {
             new_sub_category: event.target.value,
         });
     }, [itemFields]);
+
+    const sendDataCB = useCallback(() => {
+
+        let state = itemFields;
+
+        state.tags = [];
+
+        itemFields.tags.map((tag) => {
+            if(tag.isSelect) {
+                state.tags.push(tag.id);
+            }
+        });
+
+        APIGetContent.postItemCreate(state)
+            .then((response) => {
+                console.log(response);
+            });
+
+    }, [itemFields]);
+
+    useEffect(() => {
+        if(
+            itemFields.name &&
+            itemFields.price
+        ) { setIsCreateButtonDisable(false); }
+        else { setIsCreateButtonDisable(true); }
+    });
 
     console.log(itemFields)
 
@@ -238,7 +266,7 @@ const CreateItemPageInner = (): ReactElement => {
                                     placeholder={PAGE_TEXT.create_category_placeholder}
                                     value={itemFields.category.new_title}
                                     onChange={onChangeNewCategoryInput} />
-                                <button 
+                                <button
                                     style={{width: '40%'}}
                                     onClick={onClickOrSelectCategoryCB} >
                                         {PAGE_TEXT.or_select}
@@ -253,17 +281,17 @@ const CreateItemPageInner = (): ReactElement => {
                                     style={{width: '40%'}}
                                     onChange={onChangeSubCategotySelectCB}
                                     value={itemFields.category.sub_category.id} >
-                                    {categoriesAndSubCaregories.data &&
-                                        categoriesAndSubCaregories
-                                            .data[itemFields.category.id - 1]
-                                            .sub_categories
-                                            ?.map((subCategoty: ISubCategory, index: number) => (
-                                                <option 
-                                                    value={subCategoty.id} 
-                                                    key={index} >
-                                                    {subCategoty.title}
-                                                </option>
-                                    ))}
+                                        {categoriesAndSubCaregories.data &&
+                                            categoriesAndSubCaregories
+                                                .data[itemFields.category.id - 1]
+                                                .sub_categories
+                                                ?.map((subCategoty: ISubCategory, index: number) => (
+                                                    <option
+                                                        value={subCategoty.id} 
+                                                        key={index} >
+                                                        {subCategoty.title}
+                                                    </option>
+                                        ))}
                                 </select>
                                 <button
                                     style={{width: '40%'}}
@@ -295,9 +323,9 @@ const CreateItemPageInner = (): ReactElement => {
                             disabled={true} />
                         <hr/>
                         <textarea
+                            onChange={onChangeTextInput('description')}
                             className={'create-item-page__description'}
                             placeholder={PAGE_TEXT.item_description_field}
-                            onChange={onChangeTextInput('description')}
                             value={itemFields.description} />
                         <hr/>
                         <div>{PAGE_TEXT.item_price_field}:</div>
@@ -363,6 +391,11 @@ const CreateItemPageInner = (): ReactElement => {
                                 )}
                             </div>
                         </div>
+                        <input 
+                            type={'button'}
+                            disabled={isCreateButtonDisable}
+                            value={PAGE_TEXT.create_item}
+                            onClick={sendDataCB} />
                     </div>
                 </div>
             )}  

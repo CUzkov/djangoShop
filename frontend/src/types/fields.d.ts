@@ -36,11 +36,7 @@ interface IUserProfile {
 }
 
 interface IItemCreateFields {
-    "tags": {
-        "id": number,
-        "name": string,
-        "isSelect": boolean
-    }[],
+    "tags": any[],
     "category": {
         "id": number,
         "new_title": string,
