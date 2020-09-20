@@ -190,7 +190,7 @@ const CreateItemPageInner = (): ReactElement => {
 
     const sendDataCB = useCallback(() => {
 
-        let state = itemFields;
+        let state = {...itemFields};
 
         state.tags = [];
 
