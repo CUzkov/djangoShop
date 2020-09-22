@@ -12,6 +12,7 @@ import { PAGE_TEXT } from 'constants/create-item-page'
 import { initialStateCreateItem, reducerCreateItem } from './reducers'
 import { APIGetContent } from 'api/api'
 import classNames from 'classnames'
+import { Redirect } from 'react-router-dom';
 
 import './create-item-page.scss';
 
@@ -25,6 +26,8 @@ const CreateItemPageInner = (): ReactElement => {
     const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
     const [createTagInput, setCreateTagInput] = useState<string>('');
     const [isCreateButtonDisable, setIsCreateButtonDisable] = useState<boolean>(true);
+    const [isSuccessCreated, setIsSuccessCreated] = useState<boolean>(false);
+    const [isRedirectingToMainPage, setIsRedirectingToMainPage] = useState<boolean>(false);
 
     const onlyNumberRegExp = /[^0-9]+/;
     
@@ -202,10 +205,27 @@ const CreateItemPageInner = (): ReactElement => {
 
         APIGetContent.postItemCreate(state)
             .then((response) => {
-                console.log(response);
+                if(response.status === 'ok') {
+                    setIsSuccessCreated(true);
+                }
+                else 
+                {
+                    alert('Some goes wrong!!!')
+                }
             });
 
     }, [itemFields]);
+
+    const onClickReturnToMainCB = useCallback(() => {
+        setIsRedirectingToMainPage(true);
+    }, [isRedirectingToMainPage]);
+
+    const onClickCreateYet = useCallback(() => {
+        setIsSuccessCreated(false);
+        dispatchItemFields({
+            type: 'clear',
+        });
+    }, [isSuccessCreated, itemFields]);
 
     useEffect(() => {
         if(
@@ -215,8 +235,6 @@ const CreateItemPageInner = (): ReactElement => {
         else { setIsCreateButtonDisable(true); }
     });
 
-    console.log(itemFields)
-
 
     return (
         <>
@@ -224,181 +242,203 @@ const CreateItemPageInner = (): ReactElement => {
                 <></>
             )
             :
-            (
-                <div className={'create-item-page__wrapper F-R-SP'}>
-                    <div className={'create-item-page__content F-C-S'}>
-                        <div className={'create-item-page__title'}>{PAGE_TEXT.title}</div>
-                        <hr/>
-                        <input 
-                            type={'text'} 
-                            placeholder={PAGE_TEXT.item_name_field}
-                            onChange={onChangeTextInput('name')}
-                            value={itemFields.name} />
-                        <hr/>
-                        {isShowCategoryCreate ? (
-                            <div className={'create-item-page__select-button F-R-SP'}>
-                                {PAGE_TEXT.item_category_field}
-                                <select 
-                                    style={{width: '40%'}}  
-                                    value={itemFields.category.id}
-                                    onChange={onChangeCategorySelectCB} >
-                                    {categoriesAndSubCaregories.data?.map((category: ICategory, index: number) => (
-                                        <option 
-                                            value={category.id}
-                                            key={index} >
-                                            {category.title}
-                                        </option>
-                                    ))}
-                                </select>
-                                <button
-                                    style={{width: '40%'}}
-                                    onClick={onClickCreateCategoryCB} >
-                                    {PAGE_TEXT.create_category}
-                                </button>
-                            </div>
-                        )
-                        :
-                        (
-                            <div className={'F-R-SP'}>
-                                <input 
-                                    type={'text'} 
-                                    style={{width: '40%'}}
-                                    placeholder={PAGE_TEXT.create_category_placeholder}
-                                    value={itemFields.category.new_title}
-                                    onChange={onChangeNewCategoryInput} />
-                                <button
-                                    style={{width: '40%'}}
-                                    onClick={onClickOrSelectCategoryCB} >
-                                        {PAGE_TEXT.or_select}
-                                </button>
-                            </div>
-                        )}
-                        <hr/>
-                        {isShowSubCategoryCreate ? (
-                            <div className={'create-item-page__select-button F-R-SP'}>
-                                {PAGE_TEXT.item_sub_category_field}
-                                <select 
-                                    style={{width: '40%'}}
-                                    onChange={onChangeSubCategotySelectCB}
-                                    value={itemFields.category.sub_category.id} >
-                                        {categoriesAndSubCaregories.data &&
-                                            categoriesAndSubCaregories
-                                                .data[itemFields.category.id - 1]
-                                                .sub_categories
-                                                ?.map((subCategoty: ISubCategory, index: number) => (
-                                                    <option
-                                                        value={subCategoty.id} 
-                                                        key={index} >
-                                                        {subCategoty.title}
-                                                    </option>
+            (<>
+                {!isSuccessCreated ? (
+                    <div className={'create-item-page__wrapper F-R-SP'}>
+                        <div className={'create-item-page__content F-C-S'}>
+                            <div className={'create-item-page__title'}>{PAGE_TEXT.title}</div>
+                            <hr/>
+                            <input 
+                                type={'text'} 
+                                placeholder={PAGE_TEXT.item_name_field}
+                                onChange={onChangeTextInput('name')}
+                                value={itemFields.name} />
+                            <hr/>
+                            {isShowCategoryCreate ? (
+                                <div className={'create-item-page__select-button F-R-SP'}>
+                                    {PAGE_TEXT.item_category_field}
+                                    <select 
+                                        style={{width: '40%'}}  
+                                        value={itemFields.category.id}
+                                        onChange={onChangeCategorySelectCB} >
+                                        {categoriesAndSubCaregories.data?.map((category: ICategory, index: number) => (
+                                            <option 
+                                                value={category.id}
+                                                key={index} >
+                                                {category.title}
+                                            </option>
                                         ))}
-                                </select>
-                                <button
-                                    style={{width: '40%'}}
-                                    onClick={onClickCreateSubCategoryCB} >
-                                    {PAGE_TEXT.create_sub_category}
-                                </button>
-                            </div>
-                        )
-                        :
-                        (
-                            <div className={'F-R-SP'}>
-                                <input 
-                                    type={'text'} 
-                                    style={{width: '40%'}}
-                                    placeholder={PAGE_TEXT.create_sub_category_placeholder}
-                                    value={itemFields.category.sub_category.new_title}
-                                    onChange={onChangeNewSubCategoryInput} />
-                                <button
-                                    style={{width: '40%'}}
-                                    onClick={onClickOrSelectCategoryCB} >
-                                    {PAGE_TEXT.or_select}
-                                </button>
-                            </div>
-                        )}
-                        <hr/>
-                        <input 
-                            type={'text'} 
-                            placeholder={PAGE_TEXT.item_level_field}
-                            disabled={true} />
-                        <hr/>
-                        <textarea
-                            onChange={onChangeTextInput('description')}
-                            className={'create-item-page__description'}
-                            placeholder={PAGE_TEXT.item_description_field}
-                            value={itemFields.description} />
-                        <hr/>
-                        <div>{PAGE_TEXT.item_price_field}:</div>
-                        <input 
-                            type={'text'} 
-                            onChange={onChangePrice}
-                            value={itemFields.price} />
-                        <hr/>
-                        <div className={'create-item-page__tags'}>
-                            {PAGE_TEXT.item_tags_field}:
-                            <div className={'create-item-page__tags-container'}>
-                                {itemFields.tags?.map((tagObj, index) => (
-                                    <div 
-                                        className={
-                                            classNames(
-                                                'create-item-page__tag',
-                                                { 'create-item-page__tag--selected':  itemFields.tags[index].isSelect },
-                                            )}
-                                        key={index}
-                                        onClick={onClickTagCB(index)} >
-                                        {tagObj.name}
-                                    </div>
-                                ))}
-                                {itemFields.new_tags?.map((tagObj, index) => (
-                                    <div
-                                        className={
-                                            classNames(
-                                                'create-item-page__tag',
-                                                { 'create-item-page__tag--selected':  itemFields.new_tags[index].isSelect },
-                                            )}
+                                    </select>
+                                    <button
+                                        style={{width: '40%'}}
+                                        onClick={onClickCreateCategoryCB} >
+                                        {PAGE_TEXT.create_category}
+                                    </button>
+                                </div>
+                            )
+                            :
+                            (
+                                <div className={'F-R-SP'}>
+                                    <input 
+                                        type={'text'} 
+                                        style={{width: '40%'}}
+                                        placeholder={PAGE_TEXT.create_category_placeholder}
+                                        value={itemFields.category.new_title}
+                                        onChange={onChangeNewCategoryInput} />
+                                    <button
+                                        style={{width: '40%'}}
+                                        onClick={onClickOrSelectCategoryCB} >
+                                            {PAGE_TEXT.or_select}
+                                    </button>
+                                </div>
+                            )}
+                            <hr/>
+                            {isShowSubCategoryCreate ? (
+                                <div className={'create-item-page__select-button F-R-SP'}>
+                                    {PAGE_TEXT.item_sub_category_field}
+                                    <select 
+                                        style={{width: '40%'}}
+                                        onChange={onChangeSubCategotySelectCB}
+                                        value={itemFields.category.sub_category.id} >
+                                            {categoriesAndSubCaregories.data &&
+                                                categoriesAndSubCaregories
+                                                    .data[itemFields.category.id - 1]
+                                                    .sub_categories
+                                                    ?.map((subCategoty: ISubCategory, index: number) => (
+                                                        <option
+                                                            value={subCategoty.id} 
+                                                            key={index} >
+                                                            {subCategoty.title}
+                                                        </option>
+                                            ))}
+                                    </select>
+                                    <button
+                                        style={{width: '40%'}}
+                                        onClick={onClickCreateSubCategoryCB} >
+                                        {PAGE_TEXT.create_sub_category}
+                                    </button>
+                                </div>
+                            )
+                            :
+                            (
+                                <div className={'F-R-SP'}>
+                                    <input 
+                                        type={'text'} 
+                                        style={{width: '40%'}}
+                                        placeholder={PAGE_TEXT.create_sub_category_placeholder}
+                                        value={itemFields.category.sub_category.new_title}
+                                        onChange={onChangeNewSubCategoryInput} />
+                                    <button
+                                        style={{width: '40%'}}
+                                        onClick={onClickOrSelectCategoryCB} >
+                                        {PAGE_TEXT.or_select}
+                                    </button>
+                                </div>
+                            )}
+                            <hr/>
+                            <input 
+                                type={'text'} 
+                                placeholder={PAGE_TEXT.item_level_field}
+                                disabled={true} />
+                            <hr/>
+                            <textarea
+                                onChange={onChangeTextInput('description')}
+                                className={'create-item-page__description'}
+                                placeholder={PAGE_TEXT.item_description_field}
+                                value={itemFields.description} />
+                            <hr/>
+                            <div>{PAGE_TEXT.item_price_field}:</div>
+                            <input 
+                                type={'text'} 
+                                onChange={onChangePrice}
+                                value={itemFields.price} />
+                            <hr/>
+                            <div className={'create-item-page__tags'}>
+                                {PAGE_TEXT.item_tags_field}:
+                                <div className={'create-item-page__tags-container'}>
+                                    {itemFields.tags?.map((tagObj, index) => (
+                                        <div 
+                                            className={
+                                                classNames(
+                                                    'create-item-page__tag',
+                                                    { 'create-item-page__tag--selected':  itemFields.tags[index].isSelect },
+                                                )}
                                             key={index}
-                                            onClick={onClickTagCB(index, true)} >
-                                        {tagObj.name}
-                                    </div>
-                                ))}
-                                {isCreatingTag ? (
-                                    <div
-                                        className={'create-item-page__tag'}
-                                        onClick={onClickCreateTag} >
-                                            <input 
-                                                className={'create-item-page__craete-tag_input'}
-                                                onClick={onClickCreateTagInput}
-                                                type="text"
-                                                value={createTagInput}
-                                                onChange={onChangeCreateTagInput} />
-                                            <button
-                                                onClick={onCLickCreateTagButton} >
-                                                {PAGE_TEXT.create_tag_button}
-                                            </button>
-                                            <button
-                                                onClick={onClickCreateTagCancel} >
-                                                {PAGE_TEXT.cancel}
-                                            </button>
-                                    </div>
-                                )
-                                :
-                                (
-                                    <div 
-                                        className={'create-item-page__tag'}
-                                        onClick={onClickCreateTag} >
-                                        {PAGE_TEXT.create_tag}
-                                    </div>
-                                )}
+                                            onClick={onClickTagCB(index)} >
+                                            {tagObj.name}
+                                        </div>
+                                    ))}
+                                    {itemFields.new_tags?.map((tagObj, index) => (
+                                        <div
+                                            className={
+                                                classNames(
+                                                    'create-item-page__tag',
+                                                    { 'create-item-page__tag--selected':  itemFields.new_tags[index].isSelect },
+                                                )}
+                                                key={index}
+                                                onClick={onClickTagCB(index, true)} >
+                                            {tagObj.name}
+                                        </div>
+                                    ))}
+                                    {isCreatingTag ? (
+                                        <div
+                                            className={'create-item-page__tag'}
+                                            onClick={onClickCreateTag} >
+                                                <input 
+                                                    className={'create-item-page__craete-tag_input'}
+                                                    onClick={onClickCreateTagInput}
+                                                    type="text"
+                                                    value={createTagInput}
+                                                    onChange={onChangeCreateTagInput} />
+                                                <button
+                                                    onClick={onCLickCreateTagButton} >
+                                                    {PAGE_TEXT.create_tag_button}
+                                                </button>
+                                                <button
+                                                    onClick={onClickCreateTagCancel} >
+                                                    {PAGE_TEXT.cancel}
+                                                </button>
+                                        </div>
+                                    )
+                                    :
+                                    (
+                                        <div 
+                                            className={'create-item-page__tag'}
+                                            onClick={onClickCreateTag} >
+                                            {PAGE_TEXT.create_tag}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+                            <input 
+                                type={'button'}
+                                disabled={isCreateButtonDisable}
+                                value={PAGE_TEXT.create_item}
+                                onClick={sendDataCB} />
+                        </div>
+                    </div>
+            
+                )
+                :
+                (
+                    <div className={'create-item-page__success-window'}>
+                        <div className={'create-item-page__success-text'}>
+
                         </div>
                         <input 
-                            type={'button'}
-                            disabled={isCreateButtonDisable}
-                            value={PAGE_TEXT.create_item}
-                            onClick={sendDataCB} />
+                            type={'button'} 
+                            value={PAGE_TEXT.create_yet}
+                            onClick={onClickCreateYet} />
+                        <input 
+                            type={'button'} 
+                            value={PAGE_TEXT.return_to_main}
+                            onClick={onClickReturnToMainCB} />
                     </div>
-                </div>
-            )}  
+                )}
+            </>)} 
+            {isRedirectingToMainPage &&
+                <Redirect to={'/'} push={true} />
+            }
         </>
     )
 }

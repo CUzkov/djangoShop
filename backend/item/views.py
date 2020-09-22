@@ -166,5 +166,6 @@ class ItemView(APIView):
             item_saved = serializer.save()
 
         return Response({
-            'response': 'Success created item ' + json.dumps(item['name'])
+            'response': 'Success created item ' + json.dumps(item['name']),
+            'status': 'ok'
         })

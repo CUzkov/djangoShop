@@ -168,6 +168,12 @@ export const reducerCreateItem = (state: IItemCreateFields, action): IItemCreate
                 },
             };
 
+        case 'clear':
+            return {
+                ...initialStateCreateItem,
+                'tags': state.tags
+            };
+
         default: 
             return state;    
 

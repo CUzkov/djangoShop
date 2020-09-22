@@ -16,4 +16,6 @@ export const PAGE_TEXT = {
     'create_tag_button': 'создать',
     'cancel': 'отмена',
     'create_item': 'Создать предмет!',
+    'create_yet': 'Создать ещё!',
+    'return_to_main': 'Вернуться на главную',
 }
