@@ -105,8 +105,20 @@ class ItemView(APIView):
         items = Item.objects.all()
         serializer_items = ItemSerializer(items, many=True)
 
+        data = []
+
+        for item in serializer_items.data:
+            data.append(dict(item))
+
+        for item in data:
+            tags = []
+            for tag in item['tags']:
+                tag_obj = Tag.objects.filter(id=tag)
+                tags.append(tag_obj[0].name)
+            item['tags'] = tags
+
         return Response({
-            'data': serializer_items.data
+            'data': data
         })
 
     def post(self, request):

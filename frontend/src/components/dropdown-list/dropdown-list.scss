@@ -1,6 +1,7 @@
 .dropdown-list {
-    width: 250px;
+    width: 100%;
     border-bottom: 1px solid black;
+    border-radius: 5px;
     .dropdown-list__category {
         width: 100%;
         box-sizing: border-box;
@@ -17,6 +18,8 @@
             .dropdown-list__sub-category-text {
                 cursor: pointer;
                 width: min-content;
+                white-space: nowrap;
+                overflow: hidden;
             }
         }
     }

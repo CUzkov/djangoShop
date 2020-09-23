@@ -2,9 +2,13 @@ from django.db import models
 from django.conf import settings
 
 
-class Category(models.Model):
-
+class CategoryTemplate(models.Model):
     title = models.CharField(max_length=20, blank=False, default='', unique=True)
+
+    class Meta:
+        abstract = True
+
+class Category(CategoryTemplate):
 
     class Meta:
         verbose_name = 'category'
@@ -13,9 +17,7 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-class SubCategory(models.Model):
-
-    title = models.CharField(max_length=20, blank=False, default='', unique=True)
+class SubCategory(CategoryTemplate):
 
     category = models.ForeignKey('Category', on_delete=models.CASCADE, default='id')
 
@@ -28,7 +30,7 @@ class SubCategory(models.Model):
 
 class Item(models.Model):
 
-    name = models.CharField(max_length=20, blank=False, default='', unique=True)
+    name = models.CharField(max_length=40, blank=False, default='', unique=True)
     price = models.PositiveIntegerField(blank=False, default=0)
     description = models.TextField(blank=True, default='')
     likes = models.PositiveIntegerField(default=0, blank=False)

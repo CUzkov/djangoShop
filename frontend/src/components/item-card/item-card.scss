@@ -1,0 +1,35 @@
+.item-card {
+    padding: 15px;
+    box-sizing: border-box;
+    border: solid 1px black;
+    border-radius: 5px;
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin: 10px 0px 0px 10px;
+    .title {
+        font-size: 15px;
+    }
+    .description {
+        margin-top: 15px;
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+    .tags {
+        .tag {
+            display: inline;
+            cursor: pointer;
+            font-size: 12px;
+            border: 1px solid black;
+            border-radius: 15px;
+            margin-right: 10px;
+            padding: 0px 5px;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;        
+        }
+    }
+}

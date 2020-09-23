@@ -28,7 +28,13 @@ const ProfileCardInner: React.FC<IProfileCardProps> = ({
                 <div className={'profile-card F-C-SP'}>
                     <div className={'profile-card__main-info F-R-SP'}>
                         <section>
-                            <div className={'profile-card__image'} />
+                            <div className={'profile-card__image'} >
+                                <img 
+                                    src={'img/default-image.png'} 
+                                    alt={''}
+                                    height={200}
+                                    width={200} />
+                            </div>
                             <div>{PAGE_TEXT.status + userProfile?.status}</div>
                         </section>
                         <section className={'profile-card__info'}>

@@ -53,3 +53,21 @@ interface IItemCreateFields {
         "isSelect": boolean,
     }[],
 }
+
+interface IItem {
+    "id": number,
+    "name": string,
+    "price": number,
+    "description": string,
+    "likes": number,
+    "dislikes": number,
+    "item_level": string,
+    "user": number,
+    "sub_category": number,
+    "tags": any[]
+}
+
+interface ITag {
+    "id": number,
+    "name": string,
+}

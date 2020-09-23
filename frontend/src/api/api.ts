@@ -141,4 +141,12 @@ export class APIGetContent {
 
     }
 
+    static getItems = async () => {
+
+        let response = await fetch(API_HOST + '/api/item/');
+
+        return response.json();
+
+    }
+
 }
