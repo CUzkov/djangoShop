@@ -5,12 +5,14 @@ import {
     useCallback,
     useReducer,
     useRef,
-    useEffect
+    useEffect,
+    useContext,
 } from 'react';
 import { isMobile } from 'react-device-detect';
 import { reducer, initialState } from './reducer'
 import { APIGetContent } from '../../api/api'
 import { Redirect } from 'react-router-dom';
+import { Context } from '../../contexts/app'
 
 import './log-in-page.scss';
 
@@ -23,6 +25,7 @@ export const LogInPage = (): ReactElement => {
     const [isRegButtonDisable, setIsRegButtonDisable] = useState<boolean>(true);
     const [isLoginButtonDisable, setIsLoginButtonDisable] = useState<boolean>(true);
     const [isRedirectingToMainPage, setIsRedirectingToMainPage] = useState<boolean>(false);
+    const {setJWTTokenCB, JWTToken} = useContext(Context);
 
     const onClickOrRegButtonCB = useCallback((event: React.SyntheticEvent):void => {
         event.preventDefault();
@@ -73,9 +76,7 @@ export const LogInPage = (): ReactElement => {
             .then((response) => {
 
                 if(response.refresh) {
-
-                    localStorage.setItem("refresh_token", response.refresh);
-
+                    setJWTTokenCB(response.refresh);
                     setIsRedirectingToMainPage(true);
                 }
                 else {

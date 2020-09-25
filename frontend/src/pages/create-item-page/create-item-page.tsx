@@ -6,6 +6,7 @@ import {
     useEffect,
     useCallback,
     useState,
+    useContext,
 } from 'react';
 import { isMobile } from 'react-device-detect'
 import { PAGE_TEXT } from 'constants/create-item-page'
@@ -13,6 +14,7 @@ import { initialStateCreateItem, reducerCreateItem } from './reducers'
 import { APIGetContent } from 'api/api'
 import classNames from 'classnames'
 import { Redirect } from 'react-router-dom';
+import { Context } from '../../contexts/app'
 
 import './create-item-page.scss';
 
@@ -28,6 +30,7 @@ const CreateItemPageInner = (): ReactElement => {
     const [isCreateButtonDisable, setIsCreateButtonDisable] = useState<boolean>(true);
     const [isSuccessCreated, setIsSuccessCreated] = useState<boolean>(false);
     const [isRedirectingToMainPage, setIsRedirectingToMainPage] = useState<boolean>(false);
+    const {setJWTTokenCB, JWTToken} = useContext(Context);
 
     const onlyNumberRegExp = /[^0-9]+/;
     
@@ -203,7 +206,7 @@ const CreateItemPageInner = (): ReactElement => {
             }
         });
 
-        APIGetContent.postItemCreate(state)
+        APIGetContent.postItemCreate(state, JWTToken)
             .then((response) => {
                 if(response.status === 'ok') {
                     setIsSuccessCreated(true);

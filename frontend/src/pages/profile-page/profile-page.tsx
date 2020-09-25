@@ -5,12 +5,15 @@ import {
     useState,
     memo,
     useCallback,
+    useContext,
 } from 'react';
 import { isMobile } from 'react-device-detect'
 import { ProfileCard } from 'components/profile-card'
 import { APIGetContent } from 'api/api'
 import { BUTTONS_TEXT } from 'constants/profile-page'
 import { Redirect } from 'react-router-dom'
+import { Context } from '../../contexts/app'
+
 
 import './profile-page.scss';
 
@@ -20,17 +23,19 @@ const ProfilePageInner = (): ReactElement => {
     const [userProfile, setUserProfile] = useState(null);
     const [isRedirectToCreateItemPage, setIsRedirectToCreateItemPage] = useState<boolean>(false);
     const [isRedirectToLoginPage, setIsRedirectToLoginPage] = useState<boolean>(false);
+    const {setJWTTokenCB, JWTToken} = useContext(Context);
 
     const onClickCreteItemButtonCB = useCallback(() => {
         setIsRedirectToCreateItemPage(true);
     }, [isRedirectToCreateItemPage]);
 
     const onClickLogOutButtunCB = useCallback(() => {
-        localStorage.removeItem('refresh_token');
-    }, []);
+        setJWTTokenCB('');
+        setIsRedirectToLoginPage(true);
+    }, [isRedirectToLoginPage]);
 
     useEffect(() => {
-        APIGetContent.getUser()
+        APIGetContent.getUser(JWTToken)
             .then((response) => {
 
                 if(response.email) {

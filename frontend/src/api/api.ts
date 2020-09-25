@@ -45,12 +45,12 @@ export class APIGetContent {
 
     }
 
-    static getAccessToken = async () => {
+    static getAccessToken = async (token: string) => {
 
         let response = await fetch(API_HOST + '/auth/jwt/refresh/', {
             method: 'POST',
             body: JSON.stringify({
-                'refresh': localStorage.getItem('refresh_token'),
+                'refresh': token,
             }),
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -69,16 +69,16 @@ export class APIGetContent {
 
     }
 
-    static getUser = async () => {
+    static getUser = async (token: string) => {
 
-        if(!localStorage.getItem('refresh_token')) {
+        if(!token) {
             return {
                 error: 'no_refresh_token',
             };
         }
         else {
 
-            let response = await APIGetContent.getAccessToken()
+            let response = await APIGetContent.getAccessToken(token)
                 .then( async (accessToken) => {
 
                     if(accessToken.error) {
@@ -111,9 +111,9 @@ export class APIGetContent {
 
     }
 
-    static postItemCreate = async (body: IItemCreateFields) => {
+    static postItemCreate = async (body: IItemCreateFields, token: string) => {
 
-        let response = await APIGetContent.getAccessToken()
+        let response = await APIGetContent.getAccessToken(token)
             .then(async (accessToken) => {
 
                 if(accessToken.error) {

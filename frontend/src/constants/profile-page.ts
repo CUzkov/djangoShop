@@ -3,6 +3,7 @@ export const PAGE_TEXT = {
     status: 'Статус: ',
     first_name: 'Имя: ',
     last_name: 'Фамилия: ',
+    balance: 'Баланс: ',
 }
 
 export const BUTTONS_TEXT = {

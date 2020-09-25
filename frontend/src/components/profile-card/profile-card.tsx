@@ -48,6 +48,9 @@ const ProfileCardInner: React.FC<IProfileCardProps> = ({
                                 <li>
                                     {PAGE_TEXT.last_name + userProfile?.last_name}
                                 </li>
+                                <li>
+                                    {PAGE_TEXT.balance + userProfile?.balance}
+                                </li>
                             </ul>
                         </section>                        
                     </div>

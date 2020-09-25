@@ -1,12 +1,18 @@
 import * as React from "react";
-import { ReactElement } from 'react';
+import { 
+    ReactElement,
+    useContext
+} from 'react';
 import { isMobile } from 'react-device-detect'
 import { Link } from 'react-router-dom'
+import { Context } from '../../contexts/app'
 
 import './header.scss';
 
 
 export const Header = (): ReactElement => {
+
+    const {setJWTTokenCB, JWTToken} = useContext(Context);
 
     return (
         <>
@@ -33,8 +39,8 @@ export const Header = (): ReactElement => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={localStorage.getItem('refresh_token') ? '/profile' : '/login'} >
-                                        {localStorage.getItem('refresh_token') ?
+                                    <Link to={JWTToken !== '' ? '/profile' : '/login'} >
+                                        {JWTToken !== '' ?
                                             <span>Profile</span> : <span>Log in</span>
                                         }
                                     </Link>
