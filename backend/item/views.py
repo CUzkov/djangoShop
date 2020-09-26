@@ -109,7 +109,7 @@ class ItemView(APIView):
     permission_classes  = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
-        """get item method"""
+        """get item(-s) method"""
 
         try:
             item_pk = request.query_params['pk']
@@ -136,10 +136,18 @@ class ItemView(APIView):
                 'data': data
             })
         else:
-            items = Item.objects.filter(id=item_pk)
+            item = Item.objects.filter(id=item_pk)
+            serializer_item = ItemSerializer(item, many=True)
+
+            data = dict(serializer_item.data[0])
+            tags = []
+            for tag in data['tags']:
+                tag_obj = Tag.objects.filter(id=tag)
+                tags.append(tag_obj[0].name)
+            data['tags'] = tags
 
             return Response({
-                'data': "lol"
+                'data': data
             })
 
 
