@@ -64,7 +64,8 @@ interface IItem {
     "item_level": string,
     "user": number,
     "sub_category": number,
-    "tags": any[]
+    "tags": any[],
+    "is_for_sell": boolean,
 }
 
 interface ITag {

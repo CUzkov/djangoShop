@@ -141,9 +141,11 @@ export class APIGetContent {
 
     }
 
-    static getItems = async () => {
+    static getItems = async (item_pk?: number) => {
 
-        let response = await fetch(API_HOST + '/api/items/');
+        const getParametrs = item_pk !== undefined ? `?pk=${item_pk}` : '';
+
+        let response = await fetch(API_HOST + '/api/items/' + getParametrs);
 
         return response.json();
 
