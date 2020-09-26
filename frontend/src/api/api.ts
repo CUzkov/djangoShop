@@ -122,7 +122,7 @@ export class APIGetContent {
                     }
                 }
 
-                let response = await fetch(API_HOST + '/api/item/', {
+                let response = await fetch(API_HOST + '/api/items/', {
                     method: 'POST',
                     body: JSON.stringify({
                         item: {...body}
@@ -143,7 +143,7 @@ export class APIGetContent {
 
     static getItems = async () => {
 
-        let response = await fetch(API_HOST + '/api/item/');
+        let response = await fetch(API_HOST + '/api/items/');
 
         return response.json();
 

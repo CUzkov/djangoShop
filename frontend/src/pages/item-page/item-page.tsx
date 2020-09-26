@@ -17,15 +17,20 @@ const ItemPageInner: React.FC<ItemPageProps> = ({
     
     return (
         <>
-            {isMobile ? (
-                <></>
-            )
-            :
-            (
-                <div>
-                    #{match.params.id}
+            <div className={'item-page__wrapper'}>
+                <div className={'item-page__content F-R-SP'}>
+                    <div className={'left-part'}>
+                        <img 
+                            src={'/img/default-image.png'} 
+                            width={500}
+                            height={500} />
+                    </div>
+                    <div className={'right-part'}>
+                        
+                    </div>
+                    {/* #{match.params.id} */}
                 </div>
-            )}
+            </div>
         </>
     )
 }

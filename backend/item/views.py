@@ -1,20 +1,21 @@
+import json
+
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
-from rest_framework import status
 
 from .models import *
 from .serializers import *
 
-import json
 
 class SideBar(APIView):
-    """ Запрос получения категорий и подкатегорий товаров """
+    """sidebar apiview"""
 
     permission_classes = [AllowAny]
 
     def get(self, request):
-        
+        """get sidbar content method"""
+
         categories = Category.objects.all()
         sub_categories = SubCategory.objects.all()
         serializer_category = CategorySerializer(categories, many=True)
@@ -41,36 +42,40 @@ class SideBar(APIView):
         return Response(response)
 
 class CategoryView(APIView):
+    """category view"""
 
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
-
+        """get categories"""
         categories = Category.objects.all()
         serializer_categories = CategorySerializer(categories, many=True)
 
         return Response({
             "data": serializer_categories.data
-        })        
+        })
 
     def post(self, request):
+        """create category"""
 
         category = request.data.get('category')
 
         serializer = CategorySerializer(data=category)
 
         if serializer.is_valid(raise_exception=True):
-            category_saved = serializer.save()
+            serializer.save()
 
         return Response({
             'response': 'Success created subcategory ' + json.dumps(category["title"])
         })
 
 class TagView(APIView):
+    """tag view"""
 
-    permission_classes = [IsAuthenticatedOrReadOnly] 
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
+        """get tags"""
 
         tags = Tag.objects.all()
         serializer_tags = TagSerializer(tags, many=True)
@@ -80,48 +85,66 @@ class TagView(APIView):
         })
 
 class SubCategoryView(APIView):
+    """subcategory view"""
 
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request):
+        """create subcategory"""
 
         sub_category = request.data.get('sub_category')
 
         serializer = SubCategorySerializer(data=sub_category)
 
         if serializer.is_valid(raise_exception=True):
-            sub_category_saved = serializer.save()
+            serializer.save()
 
         return Response({
             'response': 'Success created subcategory ' + json.dumps(sub_category['title'])
         })
 
 class ItemView(APIView):
+    """item view"""
 
     permission_classes  = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
+        """get item method"""
 
-        items = Item.objects.all()
-        serializer_items = ItemSerializer(items, many=True)
+        try:
+            item_pk = request.query_params['pk']
+        except KeyError:
+            item_pk = -1
 
-        data = []
+        if item_pk == -1:
+            items = Item.objects.all()
+            serializer_items = ItemSerializer(items, many=True)
 
-        for item in serializer_items.data:
-            data.append(dict(item))
+            data = []
 
-        for item in data:
-            tags = []
-            for tag in item['tags']:
-                tag_obj = Tag.objects.filter(id=tag)
-                tags.append(tag_obj[0].name)
-            item['tags'] = tags
+            for item in serializer_items.data:
+                data.append(dict(item))
 
-        return Response({
-            'data': data
-        })
+            for item in data:
+                tags = []
+                for tag in item['tags']:
+                    tag_obj = Tag.objects.filter(id=tag)
+                    tags.append(tag_obj[0].name)
+                item['tags'] = tags
+
+            return Response({
+                'data': data
+            })
+        else:
+            items = Item.objects.filter(id=item_pk)
+
+            return Response({
+                'data': "lol"
+            })
+
 
     def post(self, request):
+        """create item method"""
 
         item = request.data.get('item')
 
@@ -152,7 +175,6 @@ class ItemView(APIView):
             if serializer_sub_category.is_valid(raise_exception=True):
                 sub_category_id = serializer_sub_category.save().id
 
-        
         for new_tag in item['new_tags']:
 
             serializer_tag = TagSerializer(data={
@@ -175,7 +197,7 @@ class ItemView(APIView):
         serializer = ItemSerializer(data=item_for_serialize)
 
         if serializer.is_valid(raise_exception=True):
-            item_saved = serializer.save()
+            serializer.save()
 
         return Response({
             'response': 'Success created item ' + json.dumps(item['name']),

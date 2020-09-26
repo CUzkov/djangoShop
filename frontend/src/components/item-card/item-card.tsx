@@ -2,9 +2,12 @@ import * as React from "react";
 import { 
     ReactElement,
     memo,
+    useState,
+    useCallback,
 } from 'react';
 import { isMobile } from 'react-device-detect'
 import { ITEM_CARD } from 'constants/items-page'
+import { Redirect } from 'react-router-dom';
 
 import './item-card.scss';
 
@@ -16,6 +19,12 @@ interface ItemCardProps {
 const ItemCardInner: React.FC<ItemCardProps> = ({
     item
 }: ItemCardProps): ReactElement => {
+
+    const [isRedirectToItemPage, setIsRedirectToItemPage] = useState<boolean>(false);
+
+    const onclickItemName = useCallback(():void => {
+        setIsRedirectToItemPage(true);
+    }, [isRedirectToItemPage]);
 
 
     return (
@@ -31,7 +40,11 @@ const ItemCardInner: React.FC<ItemCardProps> = ({
                         alt={''}
                         width={200}
                         height={200} />
-                    <div className={'title'}>{item.name}</div>
+                    <div 
+                        className={'title'}
+                        onClick={onclickItemName} >
+                        {item.name}
+                    </div>
                     <div className={'description'}>
                         <div style={{whiteSpace: 'pre'}}>{ITEM_CARD.description}</div>
                         {item.description.length >= 100 ? 
@@ -48,7 +61,10 @@ const ItemCardInner: React.FC<ItemCardProps> = ({
                         ))}
                     </div>
                 </div>
-            )}  
+            )} 
+            {isRedirectToItemPage &&
+                <Redirect to={`/items/${item.id}`} push={true} />
+            }
         </>
     )
 }
