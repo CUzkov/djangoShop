@@ -189,7 +189,7 @@ export const LogInPage = (): ReactElement => {
                         </div>
                     )}
                     {isRedirectingToMainPage &&
-                        <Redirect to={'/'} push={true} />
+                        <Redirect to={'/profile'} push={true} />
                     }
                 </main>
             )}  

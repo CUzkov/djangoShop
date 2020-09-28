@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
 
-from .models import *
-from .serializers import *
+from .models import Tag, Category, SubCategory, Item
+from .serializers import TagSerializer, CategorySerializer, SubCategorySerializer, ItemSerializer
 
 
 class SideBar(APIView):
@@ -211,3 +211,8 @@ class ItemView(APIView):
             'response': 'Success created item ' + json.dumps(item['name']),
             'status': 'ok'
         })
+
+    def update(self, request):
+        """update item method"""
+
+        item = request.data.get('item')

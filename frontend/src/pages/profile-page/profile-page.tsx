@@ -20,10 +20,10 @@ import './profile-page.scss';
 
 const ProfilePageInner = (): ReactElement => {
     
-    const [userProfile, setUserProfile] = useState(null);
+    const [userProfile, setUserProfile] = useState<IUserProfile>(null);
     const [isRedirectToCreateItemPage, setIsRedirectToCreateItemPage] = useState<boolean>(false);
     const [isRedirectToLoginPage, setIsRedirectToLoginPage] = useState<boolean>(false);
-    const {setJWTTokenCB, JWTToken} = useContext(Context);
+    const {setJWTTokenCB, JWTToken, setUIDCB} = useContext(Context);
 
     const onClickCreteItemButtonCB = useCallback(() => {
         setIsRedirectToCreateItemPage(true);
@@ -31,6 +31,7 @@ const ProfilePageInner = (): ReactElement => {
 
     const onClickLogOutButtunCB = useCallback(() => {
         setJWTTokenCB('');
+        setUIDCB(-1);
         setIsRedirectToLoginPage(true);
     }, [isRedirectToLoginPage]);
 
@@ -40,6 +41,7 @@ const ProfilePageInner = (): ReactElement => {
 
                 if(response.email) {
                     setUserProfile(response);
+                    setUIDCB(response.id);
                 }
                 else {
                     setIsRedirectToLoginPage(true);

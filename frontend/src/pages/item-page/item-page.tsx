@@ -5,10 +5,12 @@ import {
     useEffect,
     useState,
     useCallback,
+    useContext,
 } from 'react';
 import { APIGetContent } from '../../api/api'
 import { Redirect } from 'react-router-dom'
 import { PAGE_TEXT } from 'constants/item-page'
+import { Context } from '../../contexts/app'
 
 import './item-page.scss';
 
@@ -23,10 +25,21 @@ const ItemPageInner: React.FC<ItemPageProps> = ({
     const [item, setItem] = useState<IItem>(null);
     const [isError, setIsError] = useState<boolean>(false);
     const [isRedirectToItems, setIsRedirectToItems] = useState<boolean>(false);
+    const [isRedirectToLogIn, setIsRedirectToLogIn] = useState<boolean>(false);
+    const [isRedirectToBuy, setIsRedirectToBuy] = useState<boolean>(false);
+    const { UID } = useContext(Context);
 
     const onClickReturnCB = useCallback(() => {
         setIsRedirectToItems(true);
     }, [isRedirectToItems]);
+
+    const onClickLogInForBuyCB = useCallback(() => {
+        setIsRedirectToLogIn(true);
+    }, [isRedirectToLogIn]);
+
+    const onClickToBuy = useCallback(() => {
+        setIsRedirectToBuy(true);
+    }, [isRedirectToBuy]);
 
     useEffect(() => {
         APIGetContent.getItems(match.params.id)
@@ -38,7 +51,7 @@ const ItemPageInner: React.FC<ItemPageProps> = ({
             });
     }, []);
 
-
+    
     return (
         <>
             <div className={'item-page__wrapper'}>
@@ -69,17 +82,25 @@ const ItemPageInner: React.FC<ItemPageProps> = ({
                                 type={'button'} 
                                 value={PAGE_TEXT.return}
                                 onClick={onClickReturnCB} />
-                            <input 
-                                type={'button'} 
-                                value={PAGE_TEXT.buy}
-                                onClick={() => {}}
-                                disabled={!(item ? item.is_for_sell : false)} />
+                            {(!(UID === item?.user) && item?.is_for_sell) && 
+                                <input 
+                                    type={'button'} 
+                                    value={UID === -1 ? PAGE_TEXT.log_in : PAGE_TEXT.buy}
+                                    onClick={UID === -1 ? onClickLogInForBuyCB : onClickToBuy}
+                                    disabled={!(item ? item.is_for_sell : false)} />
+                            }
                         </div>
                     </div>
                 </div>
             </div>
             {isRedirectToItems &&
                 <Redirect to={'/items'} push={true}/>
+            }
+            {isRedirectToLogIn &&
+                <Redirect to={'/login'} push={true}/>
+            }
+            {isRedirectToBuy &&
+                <Redirect to={`/items/${match.params.id}/buy`} push={true} />
             }
         </>
     )
