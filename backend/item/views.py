@@ -216,3 +216,4 @@ class ItemView(APIView):
         """update item method"""
 
         item = request.data.get('item')
+
