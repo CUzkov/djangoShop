@@ -3,10 +3,14 @@ import json
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
+from rest_framework.generics import get_object_or_404
 
 from .models import Tag, Category, SubCategory, Item
+from users.models import User
 from .serializers import TagSerializer, CategorySerializer, SubCategorySerializer, ItemSerializer
 
+from constants.item import CHANGING_FEILDS
+from utils.responses import bad_request
 
 class SideBar(APIView):
     """sidebar apiview"""
@@ -212,8 +216,42 @@ class ItemView(APIView):
             'status': 'ok'
         })
 
-    def update(self, request):
+    def put(self, request):
         """update item method"""
 
-        item = request.data.get('item')
+        try:
+            item_pk = request.query_params['pk']
+        except KeyError:
+            return bad_request('no get params')
 
+        try:
+            item_pk = int(item_pk)
+        except ValueError:
+            return bad_request('pk must be a number')
+
+        if item_pk < 1:
+            return bad_request('pk must be above then zero')
+
+        item = request.data.get('item')
+        field = request.data.get('field')
+        saved_item = get_object_or_404(Item.objects.all(), id=item_pk)
+
+        try:
+            CHANGING_FEILDS[field]
+        except Exception:
+            return bad_request('invalid field')
+
+        if field == 'user':
+            customer = User.objects.filter(id=request.user.id)[0]
+            if customer.balance < saved_item.price:
+                return bad_request('invalid field')
+            print(customer.balance)
+
+        serializer = ItemSerializer(instance=saved_item, data=item, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            saved_item = serializer.save()
+
+        return Response({
+            'message': 'Succes update!'
+        }, status=200)

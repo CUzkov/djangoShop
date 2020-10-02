@@ -40,7 +40,6 @@ class Item(models.Model):
     description = models.TextField(blank=True, default='')
     likes = models.PositiveIntegerField(default=0, blank=False)
     dislikes = models.PositiveIntegerField(default=0, blank=False)
-    item_level = models.CharField(max_length=20, blank=False, default='Обычный')
     is_for_sell = models.BooleanField(default=False, blank=False)
 
     user = models.ForeignKey(
