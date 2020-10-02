@@ -1,16 +1,18 @@
+"""item views"""
+
 import json
 
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
-from rest_framework.generics import get_object_or_404
-
-from .models import Tag, Category, SubCategory, Item
-from users.models import User
-from .serializers import TagSerializer, CategorySerializer, SubCategorySerializer, ItemSerializer
 
 from constants.item import CHANGING_FEILDS
 from utils.responses import bad_request
+from users.models import User
+from users.serializers import UserSerializer
+from .models import Tag, Category, SubCategory, Item
+from .serializers import TagSerializer, CategorySerializer, SubCategorySerializer, ItemSerializer
+
 
 class SideBar(APIView):
     """sidebar apiview"""
@@ -232,26 +234,58 @@ class ItemView(APIView):
         if item_pk < 1:
             return bad_request('pk must be above then zero')
 
-        item = request.data.get('item')
         field = request.data.get('field')
-        saved_item = get_object_or_404(Item.objects.all(), id=item_pk)
+
+        saved_items = Item.objects.filter(id=item_pk)
+
+        if len(saved_items) == 0:
+            return bad_request('no such item')
+        else:
+            saved_item = saved_items[0]
+
+        if not saved_item.is_for_sell:
+            return bad_request('this item not for selling')
 
         try:
             CHANGING_FEILDS[field]
         except Exception:
-            return bad_request('invalid field')
+            return bad_request('not allowed field')
 
         if field == 'user':
+            if request.user.id == saved_item.user.id:
+                return bad_request("you can't buy your own item")
+
             customer = User.objects.filter(id=request.user.id)[0]
             if customer.balance < saved_item.price:
                 return bad_request('invalid field')
-            print(customer.balance)
+            else:
+                seller = User.objects.filter(id=saved_item.user.id)[0]
 
-        serializer = ItemSerializer(instance=saved_item, data=item, partial=True)
+                serializer_item = ItemSerializer(instance=saved_item, data={
+                    'user': customer.id
+                }, partial=True)
 
-        if serializer.is_valid(raise_exception=True):
-            saved_item = serializer.save()
+                serializer_customer = UserSerializer(instance=customer, data={
+                    'balance': customer.balance - saved_item.price
+                }, partial=True)
+
+                serializer_seller = UserSerializer(instance=seller, data={
+                    'balance': seller.balance + saved_item.price
+                }, partial=True)
+
+                if (
+                    serializer_item.is_valid(raise_exception=True) and
+                    serializer_customer.is_valid(raise_exception=True) and
+                    serializer_seller.is_valid(raise_exception=True)
+                   ):
+                    saved_item = serializer_item.save()
+                    customer = serializer_customer.save()
+                    seller = serializer_seller.save()
+
+                return Response({
+                    'message': 'success busnes'
+                }, status=200)
 
         return Response({
-            'message': 'Succes update!'
-        }, status=200)
+            'message': 'Server error'
+        }, status=500)
