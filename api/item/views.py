@@ -249,7 +249,7 @@ class ItemView(APIView):
         try:
             CHANGING_FEILDS[field]
         except Exception:
-            return bad_request('not allowed field')
+            return bad_request('not allowed field or not field')
 
         if field == 'user':
             if request.user.id == saved_item.user.id:

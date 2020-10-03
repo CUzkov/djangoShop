@@ -38,7 +38,7 @@
     },
     "scripts": {
         "build": "webpack && node custom-build.js",
-        "build-prod": "webpack && node custom-build.js --prod",
+        "build-prod": "webpack && node custom-build-prod.js --prod",
         "serve": "webpack-dev-server --open",
         "start": "npm run serve",
         "lint": "eslint ./src",

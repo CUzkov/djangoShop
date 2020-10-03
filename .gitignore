@@ -133,3 +133,9 @@ dmypy.json
 node_modules/
 frontend/static/js_css/
 .idea/*
+
+main.css
+bundle.js.map
+bundle.js
+main.css.map
+product/
